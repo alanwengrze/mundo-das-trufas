@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+  seed     = "ts-node prisma/seed.ts"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  cart      Cart?
+  Order     Order[]
+
+  @@index([email])
+  @@map("users")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Product {
+  id              String      @id @default(uuid())
+  name            String
+  description     String
+  price           Float
+  discountPrice   Float?
+  imageUrl        String?
+  category        String
+  quantityInStock Int
+  currency        String      @default("brl")
+  stripeId        String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  itemsCart       ItemCart[]
+  itemsOrder      ItemOrder[]
+
+  @@index([category])
+  @@map("products")
+}
+
+model Cart {
+  id        String     @id @default(uuid())
+  userId    String?    @unique
+  sessionId String? //para visitantes (não autenticado)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  itemsCart ItemCart[] //um array de produtos (cada item do carrinho)
+  order     Order? //conecta o carrinho com o Pedido
+  user      User?      @relation(fields: [userId], references: [id])
+
+  @@map("carts")
+}
+
+model ItemCart {
+  id        String @id @default(uuid())
+  quantity  Int    @default(1) //qntd de produto adicionado
+  productId String
+  cartId    String
+
+  cart    Cart    @relation(fields: [cartId], references: [id]) //para conectar com o carrinho
+  product Product @relation(fields: [productId], references: [id]) //para conectar com cada produto
+
+  @@map("itemCarts")
+}
+
+model Order {
+  id        String          @id @default(uuid())
+  userId    String?
+  cartId    String? @unique
+  amount    Float
+  status    OrderStatusEnum @default(PENDING)
+  orderDate DateTime        @default(now())
+  items     ItemOrder[] //array de itens do pedido
+  payment   Payment?
+
+  user User? @relation(fields: [userId], references: [id])
+  cart Cart? @relation(fields: [cartId], references: [id])
+
+  @@index([status])
+  @@map("orders")
+}
+
+enum OrderStatusEnum {
+  PENDING
+  COMPLETED
+  CANCELED
+}
+
+model ItemOrder {
+  id        String  @id @default(uuid())
+  quantity  Int     @default(1)
+  productId String
+  orderId   String
+  Product   Product @relation(fields: [productId], references: [id])
+  order     Order   @relation(fields: [orderId], references: [id])
+
+  @@map("itemOrders")
+}
+
+model Payment {
+  id          String   @id @default(uuid())
+  orderId     String   @unique
+  status      String
+  paymentDate DateTime @default(now())
+  type        String
+  amount      Float
+  stripeId    String
+  metadata    Json?
+  order       Order    @relation(fields: [orderId], references: [id])
+
+  @@map("payments")
+}
