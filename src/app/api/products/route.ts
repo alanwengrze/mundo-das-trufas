@@ -5,8 +5,16 @@ export async function POST(req: NextRequest) {
   //criar produtos
   try {
     const body = await req.json();
+    console.log(body);
+    const { name, price, description, quantityInStock, category } = body;
     const product = await prisma.product.create({
-      data: body
+      data: {
+        name,
+        price,
+        description,
+        quantityInStock,
+        category
+      }
     });
     return NextResponse.json(product, { status: 201 });
     

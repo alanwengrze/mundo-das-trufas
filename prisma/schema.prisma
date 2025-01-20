@@ -9,14 +9,18 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  cart      Cart?
-  Order     Order[]
+  id            String    @id @default(uuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  cart          Cart?
+  Order         Order[]
+  accounts      Account[]
+  sessions      Session[]
 
   @@index([email])
   @@map("users")
@@ -25,6 +29,47 @@ model User {
 enum Role {
   USER
   ADMIN
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
 
 model Product {
@@ -69,13 +114,13 @@ model ItemCart {
   cart    Cart    @relation(fields: [cartId], references: [id]) //para conectar com o carrinho
   product Product @relation(fields: [productId], references: [id]) //para conectar com cada produto
 
-  @@map("itemCarts")
+  @@map("items_cart")
 }
 
 model Order {
   id        String          @id @default(uuid())
   userId    String?
-  cartId    String? @unique
+  cartId    String?         @unique
   amount    Float
   status    OrderStatusEnum @default(PENDING)
   orderDate DateTime        @default(now())
@@ -103,7 +148,7 @@ model ItemOrder {
   Product   Product @relation(fields: [productId], references: [id])
   order     Order   @relation(fields: [orderId], references: [id])
 
-  @@map("itemOrders")
+  @@map("items_order")
 }
 
 model Payment {
