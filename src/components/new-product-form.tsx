@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import Image from "next/image"
-
+import { productSchema, ProductType } from "@/schemas/product.schema"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -15,25 +15,12 @@ import { toast } from "sonner"
 import { useState } from "react"
 import axios from "axios"
 
-const formSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters").max(50, "Name must be less than 50 characters"),
-  description: z
-    .string()
-    .min(10, "Description must be at least 10 characters")
-    .max(200, "Description must be less than 200 characters"),
-  price: z.number().min(0.01, "Price must be greater than 0").max(10000, "Price must be less than 10,000"),
-  imageUrl: z.string().url("Please enter a valid image URL").optional().default("/placeholder.svg?height=200&width=200"),
-  category: z.string().min(2, "Category must be at least 2 characters").max(50, "Category must be less than 50 characters"),
-  quantityInStock: z.number().min(0, "Quantity in stock must be at least 0"),
-})
-
-type FormData = z.infer<typeof formSchema>
 
 export function ProductForm() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-  const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<ProductType>({
+    resolver: zodResolver(productSchema),
     defaultValues: {
       name: "",
       description: "",
@@ -77,8 +64,9 @@ export function ProductForm() {
   
 }
 
-  async function onSubmit(data: FormData) {
+  async function onSubmit(data: ProductType) {
     try {
+      console.log(data)
 
       await api.post("/products", {
         ...data,

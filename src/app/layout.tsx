@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="px-6">
+      <body>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -24,7 +24,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Header />
-          {children}
+          <div className="w-full h-screen">
+           <div className="max-w-7xl mx-auto">{children}</div>
+          </div>
           <Toaster 
             richColors
           />

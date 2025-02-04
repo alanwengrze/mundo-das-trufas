@@ -1,8 +1,6 @@
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { productSchema } from "@/schemas/product.schema";
-import { NextResponse, NextRequest } from "next/server";
-
-
 export async function POST(req: NextRequest) {
   //criar produtos
   try {
@@ -21,11 +19,4 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     return new NextResponse("Erro ao criar produto no servidor", { status: 500 });
   }
-}
-
-export async function GET() {
-  
-  //listar produtos
-  const products = await prisma.product.findMany();
-  return NextResponse.json(products, { status: 200 });
 }

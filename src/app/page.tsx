@@ -1,7 +1,7 @@
-import { Home } from "./home/page";
+import { Home } from "./public/home/page";
 export default function App() {
   return (
-    <div>
+    <div className="">
       <Home />
     </div>
   );

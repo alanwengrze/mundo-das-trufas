@@ -1,12 +1,16 @@
-
+import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { ProductCard } from "@/components/product-card"
 
 export async function Home() {
+  const session = await auth()
+  if(!session){
+    return null
+  }
   const products = await prisma.product.findMany()
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-4 space-y-6">
+    <div className="grid grid-cols-3 gap-4">
       {
         products.map((product) => (
           <ProductCard 

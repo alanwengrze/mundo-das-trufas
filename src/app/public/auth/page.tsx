@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Icons } from "@/components/icons"
-import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 import {
   Form,
@@ -41,7 +40,6 @@ export default function AuthPage() {
   async function onSubmit(data: FormValues) {
     try {
       await signIn('email', { email: data.email, redirect: false })
-      console.log(data)
       toast.success("Link enviado com sucesso!", {
         description: "Enviamos um link de autenticação para o seu email.",
       })
@@ -54,7 +52,7 @@ export default function AuthPage() {
 
   return (
 
-    <div className="flex items-center justify-center">
+    <div className="w-full h-screen flex items-center justify-center">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">Sign in</CardTitle>
