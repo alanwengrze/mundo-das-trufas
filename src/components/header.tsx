@@ -1,7 +1,7 @@
 import { ThemeToggle } from "./theme-toggle"
 import { SignOut } from "./sign-out"
 import { SignIn } from "./sign-in"
-import { Cart } from "./cart"
+import { Cart } from "./cart-header"
 import { auth } from "@/auth"
 import Image from "next/image"
 

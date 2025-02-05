@@ -3,7 +3,6 @@ import { Button } from "./ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card"
 
 import { Buy } from "./buy"
-import { Cart } from "./cart"
 interface ProductCardProps {
   name: string
   description: string
@@ -30,13 +29,12 @@ export const ProductCard = ({name, description, category, price, imageUrl}: Prod
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col items-center justify-center">
-        <h1 className="text-2xl text-muted-foreground capitalize">{name}</h1>
-        <p className="mt-2 text-sm font-medium capitalize">{description}</p>
+        <h1 className="text-2xl capitalize">{name}</h1>
+        <span className="mt-2 text-sm text-muted-foreground font-medium capitalize">{description}</span>
       </CardContent>
       <CardFooter className="flex justify-between items-center gap-3">
-        <p className="text-xl text-muted-foreground font-semibold"><span className="text-lg mr-1">R$</span>{price}</p>
+        <p className="text-xl text-muted-foreground font-semibold"><span className="text-sm mr-1 font-thin">R$</span>{price}</p>
         <Buy />
-        <Cart />
       </CardFooter>
     </Card>
   )
