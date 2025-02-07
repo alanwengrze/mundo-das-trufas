@@ -69,13 +69,13 @@ body {
     @apply border-border;
   }
   .glass {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(255, 255, 255, 0.00);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(4px);
     border: 1px solid rgba(255, 255, 255, 0.05);
   }
   .custom-bg {
-    background-image: url('/bg-sugar.jpg');
+    background-image: url('/bg-grain.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

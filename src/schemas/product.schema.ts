@@ -9,4 +9,11 @@ export const productSchema = z.object({
   category: z.string().min(1, "Category is required"),
 });
 
+export const fullProductSchema = productSchema.extend({
+  id: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
 export type ProductType = z.infer<typeof productSchema>;
+export type FullProductType = z.infer<typeof fullProductSchema>;

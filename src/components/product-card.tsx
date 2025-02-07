@@ -1,17 +1,20 @@
 import Image from "next/image"
-import { Button } from "./ui/button"
+import { CartProduct } from "./cart-product"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card"
-
 import { Buy } from "./buy"
+import { Button } from "./ui/button"
 interface ProductCardProps {
   name: string
   description: string
   category: string
   price: number
   imageUrl?: string
+
+  onAddToCart: () => void
 }
 
-export const ProductCard = ({name, description, category, price, imageUrl}: ProductCardProps) => {
+export const ProductCard = ({name, description, category, price, imageUrl, onAddToCart}: ProductCardProps) => {
+
   return (
     <Card className="max-w-xs min-h-full card-border flex flex-col justify-between mt-8">
       <div className="-mt-7">
@@ -34,7 +37,10 @@ export const ProductCard = ({name, description, category, price, imageUrl}: Prod
       </CardContent>
       <CardFooter className="flex justify-between items-center gap-3">
         <p className="text-xl text-muted-foreground font-semibold"><span className="text-sm mr-1 font-thin">R$</span>{price}</p>
-        <Buy />
+        <div className="flex items-center gap-3">
+          <Buy />
+          <CartProduct addToCart={onAddToCart}/>
+        </div>
       </CardFooter>
     </Card>
   )

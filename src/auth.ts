@@ -1,55 +1,50 @@
-import NextAuth, { type NextAuthConfig } from "next-auth";
-import EmailProvider from "next-auth/providers/email";
-import Resend from "next-auth/providers/resend";
+import NextAuth from "next-auth";
 import { prisma } from "@/lib/prisma";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import type { Role } from "@prisma/client";
+import authConfig from "./auth.config"
 
 export const {auth, handlers, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  providers: [
-    EmailProvider({
-      server: {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: process.env.EMAIL_SERVER_PORT,
-        auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASS
-        }
-      },
-    })
-  ],
-  pages: {
-    signIn: "/auth",
-    signOut: "/auth",
-    error: "/auth",
-    verifyRequest: "/",
-    newUser: "/"
+  session: {
+    strategy: "jwt",
   },
   callbacks: {
-    async jwt({token, user}){
-      if(user){
-        const dbUser = await prisma.user.findUnique({
+    async jwt({user, token}){
+      if (user) {
+        token.sub = user.id; // Adiciona o ID do usuário ao token JWT
+    
+        const existingCart = await prisma.cart.findUnique({
           where: {
-            email: user.email as string
+            userId: user.id,
           },
-          select: {
-            role: true
+        });
+    
+        if (!existingCart) {
+          try {
+            await prisma.cart.create({
+              data: {
+                userId: user.id,
+              },
+            });
+          } catch (error) {
+            console.error("Erro ao criar carrinho:", error);
           }
-        })
-        if(dbUser){
-          token.role = dbUser.role
+        } else {
+          console.log("Carrinho já existe para o usuário:", user.id);
         }
       }
-      return token
+
+      return token;
     },
+
     async session({session, token}){
-      if(token){
-        session.user.role = token.role as Role
-        
+      if(session.user && token.sub){
+        session.user.id = token.sub
       }
       return session
     }
   },
-  secret: process.env.AUTH_SECRET
+  secret: process.env.AUTH_SECRET,
+  ...authConfig,
 })
