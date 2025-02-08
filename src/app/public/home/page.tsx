@@ -4,24 +4,14 @@ import { useSession } from "next-auth/react"
 import { ProductCard } from "@/components/product-card"
 import Image from "next/image"
 import { useEffect, useState } from "react"
-import { api } from "@/lib/axios"
 import { useCart } from "@/contexts/cart-context"
+import { useProduct } from "@/contexts/product-context"
 export function Home() {
   const {addToCart} = useCart()
+  const { products, error } = useProduct()
   const { data: session, status } = useSession()
   if(status === "unauthenticated") return null
-  const [products, setProducts] = useState([] as any)
-  async function getProducts() {
-    const response = await api.get("/products");
-    const products = response.data
-    setProducts(products)
-  }
 
-  useEffect(() => {
-    
-    getProducts()
-  }, [])
-  
   function handleAddToCart(id: string, quantity: number) {
     addToCart(id, quantity)
   }

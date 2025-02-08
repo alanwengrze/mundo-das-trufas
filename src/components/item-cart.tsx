@@ -1,24 +1,37 @@
+import { useState } from "react";
 import { Buy } from "./buy";
 import { Button } from "./ui/button";
 import { Card, CardHeader, CardContent, CardDescription, CardFooter, CardTitle } from "./ui/card";
 import Image from "next/image";
 
 interface ItemCartProps {
-  quantity: number
+  // quantity: number
   name: string
   description: string
   category: string
   price: number
-  imageUrl?: string
+  imageUrl: string
   onRemoveItem: () => void
 }
-export const ItemCart = ({name, description, category, price, imageUrl, quantity, onRemoveItem}: ItemCartProps) => {
+export const ItemCart = ({name, description, category, price, imageUrl, onRemoveItem}: ItemCartProps) => {
+
+  const [quantity, setQuantity] = useState(1);
+
+  function handleIncrement() {
+    setQuantity((prevQuantity) => prevQuantity + 1);
+  }
+
+  function handleDecrement() {
+    if (quantity > 1) {
+      setQuantity((prevQuantity) => prevQuantity - 1);
+    }
+  }
 
   return(
     <Card className="h-fit pt-4 rounded-md sm:flex items-center">
       <CardHeader>
         <Image
-            src={imageUrl || "/placeholder.svg?height=100&width=100"}
+            src={imageUrl}
             alt={name}
             width={100}
             height={100}
@@ -36,8 +49,8 @@ export const ItemCart = ({name, description, category, price, imageUrl, quantity
           </div>
           <Buy 
             quantity={quantity}
-            onMinus={() => {}}
-            onPlus={() => {}}
+            onMinus={handleIncrement}
+            onPlus={handleDecrement}
           />
           <Button onClick={onRemoveItem}>Remover</Button>
         </CardFooter>

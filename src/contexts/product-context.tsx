@@ -1,50 +1,32 @@
 "use client"
 
 import { useContext, createContext, useState } from "react";
-import { ItemCartType } from "@/schemas/itemCart.schema";
+import { FullProductType } from "@/schemas/product.schema";
 import { api } from "@/lib/axios";
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-interface CartContextType {
-  itemsCart: ItemCartType[];
-  addToCart: (productId: string, quantity: number) => void;
-  removeFromCart: (productId: string) => void;
-  incrementQuantity: (productId: string, quantity: number) => void;
+interface ProductContextType {
+  products: FullProductType[];
   error: string | null;
 }
 
-export const CartContext = createContext({} as CartContextType);
-interface CartProviderProps {
+export const ProductContext = createContext({} as ProductContextType);
+interface ProductProviderProps {
   children: React.ReactNode
 }
-export function CartProvider({ children }: CartProviderProps) {
+export function ProductProvider({ children }: ProductProviderProps) {
   const { data: session, status } = useSession();
   const [loading, setLoading] = useState(true);
 
   // Busca os itens do carrinho
-  const { data: itemsCart, error, mutate } = useSWR<ItemCartType[]>(
-    status === "authenticated" ? "/cart" : null,
+  const { data: products, error, mutate } = useSWR<FullProductType[]>(
+    status === "authenticated" ? "/products" : null,
     async (url: string) => {
       const response = await api.get(url);
       return response.data;
     }
   );
-
-  // Adiciona um produto ao carrinho
-  async function addToCart(productId: string, quantity: number) {
-    try {
-        await api.post(`/cart/items`, {
-          productId,
-          quantity
-      });
-      toast.success("Produto adicionado ao carrinho");
-      mutate();
-      
-    }catch (err) {
-      toast.error("Erro ao adicionar produto ao carrinho");
-    }
-  }
 
   async function removeFromCart(productId: string) {
     try {
@@ -69,21 +51,18 @@ export function CartProvider({ children }: CartProviderProps) {
   }
 
   return(
-    <CartContext.Provider 
+    <ProductContext.Provider 
       value={{
-        itemsCart: itemsCart || [],
-        addToCart,
-        incrementQuantity,
-        removeFromCart,
+        products: products || [],
         error: error?.message || null
       }}
     >
       {children}
-    </CartContext.Provider>
+    </ProductContext.Provider>
   )
 }
 
-export function useCart() {
-  const context = useContext(CartContext);
+export function useProduct() {
+  const context = useContext(ProductContext);
   return context
 }

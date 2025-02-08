@@ -3,6 +3,7 @@ import { CartProduct } from "./cart-product"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card"
 import { Buy } from "./buy"
 import { Button } from "./ui/button"
+import { useState } from "react"
 interface ProductCardProps {
   name: string
   description: string
@@ -15,6 +16,17 @@ interface ProductCardProps {
 
 export const ProductCard = ({name, description, category, price, imageUrl, onAddToCart}: ProductCardProps) => {
 
+    const [quantity, setQuantity] = useState(1);
+  
+    function handleIncrement() {
+      setQuantity((prevQuantity) => prevQuantity + 1);
+    }
+  
+    function handleDecrement() {
+      if (quantity > 1) {
+        setQuantity((prevQuantity) => prevQuantity - 1);
+      }
+    }
   return (
     <Card className="max-w-xs min-h-full card-border flex flex-col justify-between mt-8">
       <div className="-mt-7">
@@ -38,7 +50,11 @@ export const ProductCard = ({name, description, category, price, imageUrl, onAdd
       <CardFooter className="flex justify-between items-center gap-3">
         <p className="text-xl text-muted-foreground font-semibold"><span className="text-sm mr-1 font-thin">R$</span>{price}</p>
         <div className="flex items-center gap-3">
-          <Buy />
+          <Buy 
+            quantity={quantity}
+            onMinus={handleDecrement}
+            onPlus={handleIncrement}
+          />
           <CartProduct addToCart={onAddToCart}/>
         </div>
       </CardFooter>

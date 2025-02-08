@@ -11,7 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "./ui/sheet";
-import { useState } from "react";
+
 import { useSession } from "next-auth/react";
 import { useCart } from "@/contexts/cart-context";
 
@@ -22,6 +22,7 @@ export const CartHeader = () => {
   function handleRemoveItem(productId: string) {
     removeFromCart(productId);
   }
+
 
   if (status === "loading") return <p>Carregando...</p>;
   if (status === "unauthenticated") return <p>Por favor, faça login para ver seu carrinho.</p>;
@@ -42,9 +43,15 @@ export const CartHeader = () => {
         </SheetHeader>
          {
           itemsCart.map((item) => (
-            <ItemCart key={item.product.id} name={item.product.name} description={item.product.description} category={item.product.category} price={item.product.price} imageUrl={item.product.imageUrl} 
-            quantity={item.quantity}
-            onRemoveItem={() => handleRemoveItem(item.productId)}
+            <ItemCart 
+              key={item.product.id} 
+              name={item.product.name} 
+              description={item.product.description} 
+              category={item.product.category} 
+              price={item.product.price} 
+              imageUrl={item.product.imageUrl} 
+              // quantity={item.quantity}
+              onRemoveItem={() => handleRemoveItem(item.productId)}
             />
           ))
          }
