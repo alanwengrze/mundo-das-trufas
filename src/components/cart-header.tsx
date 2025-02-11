@@ -15,6 +15,7 @@ import {
 import { useSession } from "next-auth/react";
 import { useCart } from "@/contexts/cart-context";
 import { useState } from "react";
+import { ButtonCheckout } from "./button-checkout";
 
 export const CartHeader = () => {
   const {itemsCart, error, removeFromCart, changeQuantity} = useCart();
@@ -68,7 +69,7 @@ export const CartHeader = () => {
             <span className="text-xl font-semibold">Total:</span>
             <span className="text-xl font-semibold"><span className="text-sm mr-1 font-thin">R$</span>{totalItemsPrice.toFixed(2)}</span>
           </div>
-          <Button className="w-full text-white">Finalizar compra</Button>
+          <ButtonCheckout />
         </div>
       </SheetContent>
       
