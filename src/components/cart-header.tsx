@@ -14,13 +14,21 @@ import {
 
 import { useSession } from "next-auth/react";
 import { useCart } from "@/contexts/cart-context";
+import { useState } from "react";
 
 export const CartHeader = () => {
-  const {itemsCart, error, removeFromCart} = useCart();
+  const {itemsCart, error, removeFromCart, changeQuantity} = useCart();
   const { data: session, status } = useSession();
+  const [quantity, setQuantity] = useState(1);
 
   function handleRemoveItem(productId: string) {
     removeFromCart(productId);
+  }
+
+  function handleChangeQuantity(productId: string, quantity: number) {
+    console.log("quantity", quantity);
+    setQuantity(quantity + 1);
+    changeQuantity(productId, quantity);
   }
 
 
@@ -28,6 +36,8 @@ export const CartHeader = () => {
   if (status === "unauthenticated") return <p>Por favor, faça login para ver seu carrinho.</p>;
   if (error) return <p>Erro: {error}</p>;
   if (itemsCart.length === 0) return <p>Seu carrinho está vazio.</p>;
+
+  const totalItemsPrice = itemsCart.reduce((total, item) => total + item.product.price * item.quantity, 0);
 
   return (
     <Sheet>
@@ -39,19 +49,16 @@ export const CartHeader = () => {
       <SheetContent side="left" className="h-full flex flex-col justify-between custom-bg">
         <div className="flex flex-col gap-4">
         <SheetHeader className="mb-6">
-          <SheetTitle>Meu carrinho</SheetTitle>
+          <SheetTitle className="text-white">Meu carrinho</SheetTitle>
         </SheetHeader>
          {
           itemsCart.map((item) => (
             <ItemCart 
               key={item.product.id} 
-              name={item.product.name} 
-              description={item.product.description} 
-              category={item.product.category} 
-              price={item.product.price} 
-              imageUrl={item.product.imageUrl} 
-              // quantity={item.quantity}
+              itemCart={item}
               onRemoveItem={() => handleRemoveItem(item.productId)}
+              onIncrementQuantity={() => handleChangeQuantity(item.productId, item.quantity + 1)}
+              onDecrementQuantity={() => handleChangeQuantity(item.productId, item.quantity - 1)}
             />
           ))
          }
@@ -59,9 +66,9 @@ export const CartHeader = () => {
         <div className="flex flex-col gap-4">
           <div className="flex justify-between text-primary">
             <span className="text-xl font-semibold">Total:</span>
-            <span className="text-xl font-semibold"><span className="text-sm mr-1 font-thin">R$</span>14</span>
+            <span className="text-xl font-semibold"><span className="text-sm mr-1 font-thin">R$</span>{totalItemsPrice.toFixed(2)}</span>
           </div>
-          <Button className="w-full">Finalizar compra</Button>
+          <Button className="w-full text-white">Finalizar compra</Button>
         </div>
       </SheetContent>
       

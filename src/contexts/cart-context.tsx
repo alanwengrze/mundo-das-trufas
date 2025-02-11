@@ -10,7 +10,7 @@ interface CartContextType {
   itemsCart: ItemCartType[];
   addToCart: (productId: string, quantity: number) => void;
   removeFromCart: (productId: string) => void;
-  incrementQuantity: (productId: string, quantity: number) => void;
+  changeQuantity: (productId: string, quantity: number) => void;
   error: string | null;
 }
 
@@ -56,9 +56,10 @@ export function CartProvider({ children }: CartProviderProps) {
     }
   }
 
-  async function incrementQuantity(productId: string, quantity: number) {
+  async function changeQuantity(productId: string, quantity: number) {
     try {
-      await api.put(`/cart/items/${productId}`, {
+      console.log("quantity", quantity);
+      await api.patch(`/cart/items/${productId}`, {
         quantity
       });
       toast.success("Quantidade atualizada com sucesso");
@@ -73,7 +74,7 @@ export function CartProvider({ children }: CartProviderProps) {
       value={{
         itemsCart: itemsCart || [],
         addToCart,
-        incrementQuantity,
+        changeQuantity,
         removeFromCart,
         error: error?.message || null
       }}

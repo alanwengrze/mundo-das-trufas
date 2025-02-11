@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 
+//Retorna o carrinho do usuário autenticado
 export async function GET(request: Request) {
   const session = await auth();
   console.log(session?.user.id)

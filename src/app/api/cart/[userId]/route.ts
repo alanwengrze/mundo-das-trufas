@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
+//cria um carrinho para o usuário
 export async function POST(req: NextRequest) {
   const url = new URL(req.url);
   const userId = url.pathname.split("/").pop();

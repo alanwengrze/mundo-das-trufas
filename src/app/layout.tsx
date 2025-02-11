@@ -33,7 +33,7 @@ export default async function RootLayout({
               disableTransitionOnChange
             >
               <Header />
-              <div className="h-screen max-w-7xl mx-auto mt-8 p-4 border border-white/5 rounded-md">{children}</div>
+              <div className="h-screen max-w-7xl mx-auto mt-8 p-4 border rounded-md">{children}</div>
               <Toaster 
                 richColors
               />

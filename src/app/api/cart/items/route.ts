@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 
-
+// Adiciona um item ao carrinho do usuário
 export async function POST(request: Request) {
   const session = await auth();
 
