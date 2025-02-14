@@ -1,6 +1,6 @@
 "use client"
 
-import { signIn, useSession } from "next-auth/react"
+import { signIn } from "next-auth/react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
