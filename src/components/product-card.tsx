@@ -42,6 +42,9 @@ export const ProductCard = ({product}: ProductCardProps) => {
       <CardHeader className="w-full">
         <CardTitle className="w-min m-auto px-4 text-lg uppercase text-primary bg-primary/20 font-semibold text-center rounded-full">
           {product.category}
+          {
+            product.quantityInStock <= 0 && <span className="text-rose-500 ml-2 font-thin">Indisponível</span>
+          }
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col items-center justify-center">

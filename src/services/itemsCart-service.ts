@@ -2,6 +2,7 @@ import { ItemsCartRepository } from "@/repositories/itemsCart-repository";
 
 import { BaseService } from "./base-service";
 import { CartType } from "@/schemas/cart.schema";
+import { AppError } from "@/errors/app-error";
 
 export class ItemsCartService extends BaseService {
   private itemsCartRepository = new ItemsCartRepository();
@@ -14,11 +15,15 @@ export class ItemsCartService extends BaseService {
     const userId = await this.getUserId();
     const cart = await this.getCart(userId);
     const cartId = cart.id;
+    const product = await this.getProduct(productId);
+
+    if(quantity > product.quantityInStock) throw new AppError("Quantidade indisponível no estoque.");
 
     const itemExists = await this.itemsCartRepository.verifyIfItemExists(productId, cartId);
 
     if(itemExists){
-      return this.itemsCartRepository.updateQuantity(itemExists.id, itemExists.quantity + quantity);
+      const attQuantity = itemExists.quantity + quantity;
+      return this.itemsCartRepository.updateQuantity(itemExists.id, attQuantity);
     }
 
     return this.itemsCartRepository.create(cartId, productId, quantity);
@@ -36,6 +41,12 @@ export class ItemsCartService extends BaseService {
     const userId = await this.getUserId();
     const cart = await this.getCart(userId);
     const cartId = cart.id;
+    const product = await this.getProduct(productId);
+
+    if(quantity === 0) return this.remove(productId);
+    if(quantity < 0) throw new AppError("Quantidade inválida.");
+    if(quantity > product.quantityInStock) throw new AppError("Quantidade indisponível no estoque.");
+    
 
     return this.itemsCartRepository.update(productId, quantity, cartId);
   }

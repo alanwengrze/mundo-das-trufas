@@ -38,11 +38,16 @@ export function CartProvider({ children }: CartProviderProps) {
           productId,
           quantity
       });
-      toast.success("Produto adicionado ao carrinho");
       mutate();
+      if(quantity === 1) {
+        toast.success(`${quantity} produto adicionado ao carrinho.`);
+      }
+      else{
+        toast.success(`${quantity} produto(s) adicionado(s) ao carrinho`);
+      }
       
     }catch (err) {
-      toast.error("Erro ao adicionar produto ao carrinho");
+      
     }
   }
 
@@ -58,14 +63,14 @@ export function CartProvider({ children }: CartProviderProps) {
 
   async function changeQuantity(productId: string, quantity: number) {
     try {
-      console.log("quantity", quantity);
       await api.patch(`/cart/items/${productId}`, {
         quantity
       });
-      toast.success("Quantidade atualizada com sucesso");
+      
       mutate();
-    }catch (err) {
-      toast.error("Erro ao atualizar quantidade");
+      toast.success("Quantidade atualizada com sucesso");
+    }catch (error) {
+      
     }
   }
 
