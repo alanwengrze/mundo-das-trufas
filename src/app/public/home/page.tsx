@@ -3,7 +3,7 @@
 import { ProductCard } from "@/components/product-card"
 import Image from "next/image"
 import { useProduct } from "@/contexts/product-context"
-export function Home() {
+export default function Home() {
   const { products } = useProduct()
 
   return (
