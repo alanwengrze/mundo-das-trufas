@@ -3,7 +3,6 @@ import { SignOut } from "./sign-out"
 import { SignIn } from "./sign-in"
 import { CartHeader } from "./cart-header"
 import { auth } from "@/auth"
-import Image from "next/image"
 
 export const Header = async () => {
   const session = await auth()

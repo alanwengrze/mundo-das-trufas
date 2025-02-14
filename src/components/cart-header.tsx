@@ -27,7 +27,6 @@ export const CartHeader = () => {
   }
 
   function handleChangeQuantity(productId: string, quantity: number) {
-    console.log("quantity", quantity);
     setQuantity(quantity + 1);
     changeQuantity(productId, quantity);
   }
@@ -67,7 +66,7 @@ export const CartHeader = () => {
         <div className="flex flex-col gap-4">
           <div className="flex justify-between text-primary">
             <span className="text-xl font-semibold">Total:</span>
-            <span className="text-xl font-semibold"><span className="text-sm mr-1 font-thin">R$</span>{totalItemsPrice.toFixed(2)}</span>
+            <SheetDescription className="text-xl font-semibold"><span className="text-sm mr-1 font-thin">R$</span>{totalItemsPrice.toFixed(2)}</SheetDescription>
           </div>
           <ButtonCheckout />
         </div>

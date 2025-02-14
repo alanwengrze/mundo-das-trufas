@@ -1,6 +1,6 @@
 import Image from "next/image"
 import { CartProduct } from "./cart-product"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card"
+import { Card, CardContent,  CardFooter, CardHeader, CardTitle } from "./ui/card"
 import { Buy } from "./buy"
 import { useState } from "react"
 import { FullProductType } from "@/schemas/product.schema"

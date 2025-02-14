@@ -1,11 +1,10 @@
 "use client"
 
-import { useContext, createContext, useState } from "react";
+import { useContext, createContext } from "react";
 import { FullProductType } from "@/schemas/product.schema";
 import { api } from "@/lib/axios";
 import useSWR from "swr";
-import { useSession } from "next-auth/react";
-import { toast } from "sonner";
+// import { useSession } from "next-auth/react";
 interface ProductContextType {
   products: FullProductType[];
   error: string | null;
@@ -16,8 +15,8 @@ interface ProductProviderProps {
   children: React.ReactNode
 }
 export function ProductProvider({ children }: ProductProviderProps) {
-  const { data: session, status } = useSession();
-  const [loading, setLoading] = useState(true);
+  // const { data: session, status } = useSession();
+  // const [loading, setLoading] = useState(true);
 
   // Busca os itens do carrinho
   const { data: products, error, mutate } = useSWR<FullProductType[]>(

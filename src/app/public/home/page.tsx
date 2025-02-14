@@ -4,7 +4,7 @@ import { ProductCard } from "@/components/product-card"
 import Image from "next/image"
 import { useProduct } from "@/contexts/product-context"
 export function Home() {
-  const { products, error } = useProduct()
+  const { products } = useProduct()
 
   return (
     <div className="relative grid grid-flow-dense gap-4 grid-cols-1 sm:grid-cols-3 ">
