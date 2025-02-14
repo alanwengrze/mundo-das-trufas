@@ -17,7 +17,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { redirect } from "next/navigation"
 
 // Define the form schema with Zod
 const formSchema = z.object({
@@ -27,9 +26,6 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>
 
 export default function AuthPage() {
-  const session = useSession()
-
-  if(session.status === "authenticated") return redirect("/")
 
   // Initialize React Hook Form
   const form = useForm<FormValues>({
@@ -48,9 +44,7 @@ export default function AuthPage() {
         description: "Enviamos um link de autenticação para o seu email.",
       })
     } catch (error) {
-      toast.error("Falha ao enviar o link!", {
-        description: "Ocorreu um erro ao enviar o link, por favor, tente novamente.",
-      })
+      console.error(error)
     }
   }
 

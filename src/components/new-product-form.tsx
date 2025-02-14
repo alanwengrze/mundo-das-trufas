@@ -2,8 +2,6 @@
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import Image from "next/image"
 import { productSchema, ProductType } from "@/schemas/product.schema"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
@@ -56,6 +54,7 @@ export function ProductForm() {
       })
       
     } catch (error) {
+      console.error(error);
       toast.error("Falha ao enviar a imagem!", {
         description: "Ocorreu um erro ao enviar a imagem, por favor, tente novamente.",
       })
@@ -66,7 +65,6 @@ export function ProductForm() {
 
   async function onSubmit(data: ProductType) {
     try {
-      console.log(data)
 
       await api.post("/products", {
         ...data,
@@ -76,6 +74,7 @@ export function ProductForm() {
         description: `Um novo produto foi cadastrado na categoria ${data.category}.`,
       })
     } catch (error) {
+      console.error(error);
       toast.error("Falha ao criar o produto!", {
         description: "Ocorreu um erro ao criar o produto, por favor, tente novamente.",
       })

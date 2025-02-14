@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { handleError } from "@/middlewares/error-handler";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -14,12 +15,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(user, { status: 201 });
     
   } catch (error) {
-    return new NextResponse("Erro ao criar usuário", { status: 500 });
+    return handleError(error);
   }
  
 }
 
-export async function GET(req: NextRequest) {
-  const users = await prisma.user.findMany();
-  return NextResponse.json(users, { status: 200 });
-}
+// export async function GET() {
+//   const users = await prisma.user.findMany();
+//   return NextResponse.json(users, { status: 200 });
+// }

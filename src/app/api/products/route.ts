@@ -1,5 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { ProductsService } from "@/services/products-service";
+import { handleError } from "@/middlewares/error-handler";
 
 export async function POST(req: NextRequest) {
 
@@ -13,13 +14,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(product, { status: 201 });
     
   } catch (error) {
-    return new NextResponse("Erro ao criar produto no servidor", { status: 500 });
+    return handleError(error);
   }
 }
 
 export async function GET() {
   const productService = new ProductsService();
-  const products = await productService.findAll();
+  try {
+    const products = await productService.findAll();
 
-  return NextResponse.json(products, { status: 200 });
+    return NextResponse.json(products, { status: 200 });
+  } catch (error) {
+    return handleError(error);
+  }
+  
 }

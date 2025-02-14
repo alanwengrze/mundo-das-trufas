@@ -1,7 +1,6 @@
 import { ItemsCartRepository } from "@/repositories/itemsCart-repository";
 
 import { BaseService } from "./base-service";
-import { CartType } from "@/schemas/cart.schema";
 import { AppError } from "@/errors/app-error";
 
 export class ItemsCartService extends BaseService {

@@ -14,20 +14,17 @@ import {
 
 import { useSession } from "next-auth/react";
 import { useCart } from "@/contexts/cart-context";
-import { useState } from "react";
 import { ButtonCheckout } from "./button-checkout";
 
 export const CartHeader = () => {
   const {itemsCart, error, removeFromCart, changeQuantity} = useCart();
-  const { data: session, status } = useSession();
-  const [quantity, setQuantity] = useState(1);
+  const { status } = useSession();
 
   function handleRemoveItem(productId: string) {
     removeFromCart(productId);
   }
 
   function handleChangeQuantity(productId: string, quantity: number) {
-    setQuantity(quantity + 1);
     changeQuantity(productId, quantity);
   }
 

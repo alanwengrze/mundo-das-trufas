@@ -19,8 +19,8 @@ interface CartProviderProps {
   children: React.ReactNode
 }
 export function CartProvider({ children }: CartProviderProps) {
-  const { data: session, status } = useSession();
-  const [loading, setLoading] = useState(true);
+  const { status } = useSession();
+  // const [loading, setLoading] = useState(true);
 
   // Busca os itens do carrinho
   const { data: itemsCart, error, mutate } = useSWR<ItemCartType[]>(
@@ -33,15 +33,15 @@ export function CartProvider({ children }: CartProviderProps) {
 
   // Adiciona um produto ao carrinho
   async function addToCart(productId: string, quantity: number) {
-    try {
-        await api.post(`/cart/items`, {
-          productId,
-          quantity
-      });
-      mutate();
-    }catch (err) {
-      
-    }
+   try {
+    await api.post(`/cart/items`, {
+      productId,
+      quantity
+    });
+    mutate();
+   } catch (error) {
+     console.error(error);
+   }
   }
 
   async function removeFromCart(productId: string) {
@@ -49,7 +49,7 @@ export function CartProvider({ children }: CartProviderProps) {
       await api.delete(`/cart/items/${productId}`);
       mutate();
     }catch (err) {
-      
+      console.error(err);
     }
   }
 
@@ -61,7 +61,7 @@ export function CartProvider({ children }: CartProviderProps) {
       
       mutate();
     }catch (error) {
-      
+      console.error(error);
     }
   }
 

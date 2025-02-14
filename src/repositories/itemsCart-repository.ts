@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { CartType } from "@/schemas/cart.schema";
 
 export class ItemsCartRepository {
 

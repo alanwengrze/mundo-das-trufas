@@ -5,8 +5,8 @@ import { api } from "@/lib/axios";
 import { useSession } from "next-auth/react";
 import { Order } from "@/components/order";
 export default function Orders() {
-  const { data: session, status } = useSession();
-  const { data: orders, error } = useSWR<OrderType[]>(
+  const { status } = useSession();
+  const { data: orders } = useSWR<OrderType[]>(
    status === "authenticated" ? "/order" : null, 
     async (url: string) => {
           const response = await api.get(url);
