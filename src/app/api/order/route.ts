@@ -54,8 +54,8 @@ export async function POST(request: Request) {
       data: {
         userId: session.user.id,
         status: paymentStatus === "paid" ? "COMPLETED" : "PENDING",
-        amount: cart.itemsCart.reduce((acc, item) => acc + item.product.price * item.quantity, 0),
-        items: {
+        amount: cart.amount,
+        itemsOrder: {
           create: cart.itemsCart.map((item) => ({
             productId: item.product.id,
             quantity: item.quantity
@@ -63,15 +63,15 @@ export async function POST(request: Request) {
         }
       },
       include: {
-        items: true
+        itemsOrder: true
       }
     });
     
     if(order.status === "COMPLETED"){
-      order.items.map(async (item) => {
+      order.itemsOrder.map(async (item) => {
         await productsService.decrementStock(item.productId, item.quantity);
       })
-      console.log("Produtos atualizados:", order.items)
+      console.log("Produtos atualizados:", order.itemsOrder);
     }
 
     console.log("Ordem criada:", order);
@@ -99,9 +99,9 @@ export async function GET() {
     const orders = await prisma.order.findMany({
       where: { userId: session.user.id },
       include: {
-        items: {
+        itemsOrder: {
           include: {
-            Product: true
+            product: true
           }
         }
       }

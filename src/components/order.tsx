@@ -8,7 +8,7 @@ export function Order({ order }: OrderProps) {
       <h1>{order.amount}</h1>
       <h1>{order.status}</h1>
       <div>
-        {order.items.map((item) => (
+        {order.itemsOrder.map((item) => (
           <div key={item.productId}>
             <h1>{item.quantity}</h1>
             <h1>{item.productId}</h1>

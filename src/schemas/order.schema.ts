@@ -3,9 +3,9 @@ import { itemOrderSchema } from "./itemOrder.schema";
 
 export const orderSchema = z.object({
   userId: z.string(),
-  status: z.enum(["pending", "completed", "canceled"]),
+  status: z.enum(["PENDING", "SUCCESS", "COMPLETED", "CANCELED"]),
   amount: z.number().min(0),
-  items: z.array(itemOrderSchema),
+  itemsOrder: z.array(itemOrderSchema),
   orderDate: z.date(),
 });
 

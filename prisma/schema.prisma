@@ -1,11 +1,12 @@
 generator client {
   provider = "prisma-client-js"
-  seed     = "ts-node prisma/seed.ts"
+  // seed     = "ts-node prisma/seed.ts"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -13,8 +14,7 @@ model User {
   name          String?
   email         String?   @unique
   emailVerified DateTime?
-  image         String?
-  role          Role      @default(USER)
+  role          Role      @default(CUSTOMER)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   cart          Cart?
@@ -27,7 +27,7 @@ model User {
 }
 
 enum Role {
-  USER
+  CUSTOMER
   ADMIN
 }
 
@@ -95,9 +95,9 @@ model Product {
 model Cart {
   id        String     @id @default(uuid())
   userId    String?    @unique
-  sessionId String? //para visitantes (não autenticado)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+  amount Float
   itemsCart ItemCart[] //um array de produtos (cada item do carrinho)
   order     Order? //conecta o carrinho com o Pedido
   user      User?      @relation(fields: [userId], references: [id])
@@ -124,7 +124,7 @@ model Order {
   amount    Float
   status    OrderStatusEnum @default(PENDING)
   orderDate DateTime        @default(now())
-  items     ItemOrder[] //array de itens do pedido
+  itemsOrder     ItemOrder[] //array de itens do pedido
   payment   Payment?
 
   user User? @relation(fields: [userId], references: [id])
@@ -136,6 +136,7 @@ model Order {
 
 enum OrderStatusEnum {
   PENDING
+  SUCCESS
   COMPLETED
   CANCELED
 }
@@ -145,8 +146,7 @@ model ItemOrder {
   quantity  Int     @default(1)
   productId String
   orderId   String
-  
-  Product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
   order     Order   @relation(fields: [orderId], references: [id])
 
   @@map("items_order")

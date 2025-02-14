@@ -21,6 +21,6 @@ export default {
     signOut: "/auth",
     error: "/auth",
     verifyRequest: "/",
-    newUser: "/"
+    newUser: "/",
   },
 } satisfies NextAuthConfig

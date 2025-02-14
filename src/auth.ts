@@ -38,6 +38,7 @@ export const {auth, handlers, signIn, signOut } = NextAuth({
             await prisma.cart.create({
               data: {
                 userId: user.id,
+                amount: 0,
               },
             });
           } catch (error) {
