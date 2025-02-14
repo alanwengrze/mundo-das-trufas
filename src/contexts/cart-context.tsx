@@ -5,7 +5,7 @@ import { ItemCartType } from "@/schemas/itemCart.schema";
 import { api } from "@/lib/axios";
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
-import { toast } from "sonner";
+
 interface CartContextType {
   itemsCart: ItemCartType[];
   addToCart: (productId: string, quantity: number) => void;
@@ -39,13 +39,6 @@ export function CartProvider({ children }: CartProviderProps) {
           quantity
       });
       mutate();
-      if(quantity === 1) {
-        toast.success(`${quantity} produto adicionado ao carrinho.`);
-      }
-      else{
-        toast.success(`${quantity} produto(s) adicionado(s) ao carrinho`);
-      }
-      
     }catch (err) {
       
     }
@@ -54,10 +47,9 @@ export function CartProvider({ children }: CartProviderProps) {
   async function removeFromCart(productId: string) {
     try {
       await api.delete(`/cart/items/${productId}`);
-      toast.success("Produto removido do carrinho");
       mutate();
     }catch (err) {
-      toast.error("Erro ao remover produto do carrinho");
+      
     }
   }
 
@@ -68,7 +60,6 @@ export function CartProvider({ children }: CartProviderProps) {
       });
       
       mutate();
-      toast.success("Quantidade atualizada com sucesso");
     }catch (error) {
       
     }

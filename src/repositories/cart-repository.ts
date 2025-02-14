@@ -32,4 +32,9 @@ export class CartRepository {
     });
     return cart?.id;
   }
+
+  async clearCart(userId: string) {
+    const cart = await prisma.cart.deleteMany({ where: { userId } });
+    return cart;
+  }
 }

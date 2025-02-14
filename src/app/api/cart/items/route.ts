@@ -4,10 +4,9 @@ import { handleError } from "@/middlewares/error-handler";
 
 // Adiciona um item ao carrinho do usuário
 export async function POST(request: Request) {
-
   try {
-    const itemsCartService = new ItemsCartService();
     const { productId, quantity } = await request.json();
+    const itemsCartService = new ItemsCartService();
 
     await itemsCartService.create(productId, quantity);
 

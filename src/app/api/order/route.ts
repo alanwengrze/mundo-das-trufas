@@ -3,6 +3,8 @@ import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { ProductsService } from "@/services/products-service";
+import { handleError } from "@/middlewares/error-handler";
+import { AppError } from "@/errors/app-error";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -11,7 +13,7 @@ export async function POST(request: Request) {
   const session = await auth();
 
   if (!session?.user?.id) {
-    return NextResponse.json({ error: "Usuário não autenticado." }, { status: 401 });
+    throw new AppError("Usuário nao autenticado.");
   }
 
   try {
@@ -20,16 +22,16 @@ export async function POST(request: Request) {
 
     const { sessionId } = await request.json();
 
-    if (!sessionId) return NextResponse.json({ error: "sessionId ausente" }, { status: 400 });
+    if (!sessionId) throw new AppError("Sessão nao encontrada.");
 
     const sessionStripe = await stripe.checkout.sessions.retrieve(sessionId);
 
-    if (!sessionStripe) return NextResponse.json({ error: "Sessão não encontrada" }, { status: 404 });
+    if (!sessionStripe) throw new AppError("Sessão nao encontrada.");
   
     const paymentStatus = sessionStripe.payment_status;
     const userId = sessionStripe.metadata?.userId;
   
-    if (!userId) return NextResponse.json({ error: "Usuário não encontrado" }, { status: 400 });
+    if (!userId) throw new AppError("Usuário nao encontrado.");
 
     // Busca o carrinho do usuário
     const cart = await prisma.cart.findUnique({
@@ -44,7 +46,7 @@ export async function POST(request: Request) {
     });
 
     if (!cart || cart.itemsCart.length === 0) {
-      return NextResponse.json({ error: "Carrinho vazio." }, { status: 400 });
+      throw new AppError("Carrinho vazio.");
     }
 
     // Cria a ordem com os dados do carrinho
@@ -81,8 +83,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ message: "Pedido criado com sucesso!", order }, { status: 201 });
   } catch (error) {
-    console.error("Erro ao finalizar pedido:", error instanceof Error ? error.message : error);
-    return NextResponse.json({ error: "Erro interno do servidor." }, { status: 500 });
+    return handleError(error);
   }
 }
 
@@ -91,7 +92,7 @@ export async function GET(request: Request) {
   const session = await auth();
 
   if (!session?.user?.id) {
-    return NextResponse.json({ error: "Usuário não autenticado." }, { status: 401 });
+    throw new AppError("Usuário nao autenticado.");
   }
 
   try {
@@ -108,7 +109,6 @@ export async function GET(request: Request) {
 
     return NextResponse.json(orders, { status: 200 });
   }catch (error) {
-    console.error("Erro ao buscar pedidos:", error instanceof Error ? error.message : error);
-    return NextResponse.json({ error: "Erro ao buscar pedidos." }, { status: 500 });
+    return handleError(error);
   }
 }
