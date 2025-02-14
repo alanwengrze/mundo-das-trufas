@@ -49,12 +49,14 @@ export async function POST(request: Request) {
       throw new AppError("Carrinho vazio.");
     }
 
+    const amountPrice = cart.itemsCart.reduce((total, item) => total + item.quantity * item.product.price, 0);
+
     // Cria a ordem com os dados do carrinho
     const order = await prisma.order.create({
       data: {
         userId: session.user.id,
         status: paymentStatus === "paid" ? "COMPLETED" : "PENDING",
-        amount: cart.amount,
+        amount: amountPrice,
         itemsOrder: {
           create: cart.itemsCart.map((item) => ({
             productId: item.product.id,

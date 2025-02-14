@@ -5,6 +5,7 @@ export class CartRepository {
     const cart = await prisma.cart.create({
       data: {
         userId,
+        amount: 0,
       },
     });
 
