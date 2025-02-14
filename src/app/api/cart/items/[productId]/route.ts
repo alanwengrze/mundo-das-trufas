@@ -1,55 +1,19 @@
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { NextResponse, NextRequest } from "next/server";
-
+import { ItemsCartService } from "@/services/itemsCart-service";
 // Remover item do carrinho
 export async function DELETE(request: Request ) {
-  const session = await auth();
-  // Verifica se o usuário está autenticado
-  if (!session?.user?.id) {
-    return NextResponse.json(
-      { error: "Usuário não autenticado." },
-      { status: 401 }
-    );
-  }
 
   try {
-
+    const itemsCartService = new ItemsCartService();
     // buscar pela url
     const url = new URL(request.url);
     // cart/items/{productId}
     const productId = url.pathname.split("/").pop();
  
-    if (!productId) {
-      return NextResponse.json(
-        { error: "Produto não encontrado." },
-        { status: 404 }
-      );
-    }
 
-    const cart = await prisma.cart.findUnique({
-      where: {
-        userId: session.user.id,
-      },
-      select: {
-        id: true,
-      }
-    });
+    const items = await itemsCartService.remove(productId!);
 
-    if(!cart) {
-      return NextResponse.json(
-        { error: "Carrinho nao encontrado." },
-        { status: 404 }
-      );
-    }
-
-    // Remove o item do carrinho
-    await prisma.itemCart.deleteMany({
-      where: {
-        cartId: cart.id,
-        productId: productId
-      },
-    });
 
     return NextResponse.json({ message: "Item do carrinho removido com sucesso." }, { status: 200 });
   } catch (error) {
@@ -58,7 +22,6 @@ export async function DELETE(request: Request ) {
       }
   }
 export async function PATCH(request: Request) {
-  console.log("update")
   const session = await auth();
   // Verifica se o usuário está autenticado
   if (!session?.user?.id) {
@@ -69,45 +32,15 @@ export async function PATCH(request: Request) {
   }
 
   try {
+    const itemsCartService = new ItemsCartService();
     // buscar pela url
     const url = new URL(request.url);
     // cart/items/{productId}
     const productId = url.pathname.split("/").pop();
     const { quantity } = await request.json();
-    console.log(quantity, productId);
-    if (!productId) {
-      return NextResponse.json(
-        { error: "Produto não encontrado." },
-        { status: 404 }
-      );
-    }
-
-    const cart = await prisma.cart.findUnique({
-      where: {
-        userId: session.user.id,
-      },
-      select: {
-        id: true,
-      }
-    });
-
-    if(!cart) {
-      return NextResponse.json(
-        { error: "Carrinho nao encontrado." },
-        { status: 404 }
-      );
-    }
 
     // Atualiza a quantidade do item do carrinho
-    await prisma.itemCart.updateMany({
-      where: {
-        cartId: cart.id,
-        productId: productId
-      },
-      data: {
-        quantity: quantity
-      },
-    });
+    await itemsCartService.update(productId!, quantity);
 
     return NextResponse.json({ message: "Item do carrinho atualizado com sucesso." }, { status: 200 });
 

@@ -21,34 +21,12 @@ export function ProductProvider({ children }: ProductProviderProps) {
 
   // Busca os itens do carrinho
   const { data: products, error, mutate } = useSWR<FullProductType[]>(
-    status === "authenticated" ? "/products" : null,
+    "/products",
     async (url: string) => {
       const response = await api.get(url);
       return response.data;
     }
   );
-
-  async function removeFromCart(productId: string) {
-    try {
-      await api.delete(`/cart/items/${productId}`);
-      toast.success("Produto removido do carrinho");
-      mutate();
-    }catch (err) {
-      toast.error("Erro ao remover produto do carrinho");
-    }
-  }
-
-  async function incrementQuantity(productId: string, quantity: number) {
-    try {
-      await api.put(`/cart/items/${productId}`, {
-        quantity
-      });
-      toast.success("Quantidade atualizada com sucesso");
-      mutate();
-    }catch (err) {
-      toast.error("Erro ao atualizar quantidade");
-    }
-  }
 
   return(
     <ProductContext.Provider 

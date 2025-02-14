@@ -1,15 +1,10 @@
 "use client"
 
-import { useSession } from "next-auth/react"
 import { ProductCard } from "@/components/product-card"
 import Image from "next/image"
-import { useCart } from "@/contexts/cart-context"
 import { useProduct } from "@/contexts/product-context"
 export function Home() {
-  const {addToCart} = useCart()
   const { products, error } = useProduct()
-  const { data: session, status } = useSession()
-  if(status === "unauthenticated") return null
 
   return (
     <div className="relative grid grid-flow-dense gap-4 grid-cols-1 sm:grid-cols-3 ">

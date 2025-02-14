@@ -1,21 +1,15 @@
-import { prisma } from "@/lib/prisma";
-import { productSchema } from "@/schemas/product.schema";
 import { NextResponse, NextRequest } from "next/server";
-
+import { ProductsService } from "@/services/products-service";
 
 export async function POST(req: NextRequest) {
-  //criar produtos
+
   try {
-    
     //pegar os dados do body
     const body = await req.json();
 
-    //validar os dados (adiciona a tipagem de productSchema ao body)
-    const validatedData = productSchema.parse(body);
-
-    const product = await prisma.product.create({
-      data: validatedData
-    });
+    //service
+    const productService = new ProductsService();
+    const product = await productService.create(body);
     return NextResponse.json(product, { status: 201 });
     
   } catch (error) {
@@ -24,8 +18,8 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
-  
-  //listar produtos
-  const products = await prisma.product.findMany();
+  const productService = new ProductsService();
+  const products = await productService.findAll();
+
   return NextResponse.json(products, { status: 200 });
 }
