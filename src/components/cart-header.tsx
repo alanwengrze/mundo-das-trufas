@@ -36,6 +36,7 @@ export const CartHeader = () => {
 
   const totalItemsPrice = itemsCart.reduce((total, item) => total + item.product.price * item.quantity, 0);
 
+
   return (
     <Sheet>
       <SheetTrigger asChild> 

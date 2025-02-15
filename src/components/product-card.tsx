@@ -4,13 +4,15 @@ import { Card, CardContent,  CardFooter, CardHeader, CardTitle } from "./ui/card
 import { Buy } from "./buy"
 import { useState } from "react"
 import { FullProductType } from "@/schemas/product.schema"
-
+import { useSession } from "next-auth/react"
 import { useCart } from "@/contexts/cart-context"
+import { redirect } from "next/navigation"
 interface ProductCardProps {
   product: FullProductType
 }
 
 export const ProductCard = ({product}: ProductCardProps) => {
+  const { status } = useSession();
   const {addToCart} = useCart()
   const [quantity, setQuantity] = useState(1);
 
@@ -58,8 +60,9 @@ export const ProductCard = ({product}: ProductCardProps) => {
             quantity={quantity}
             onMinus={handleDecrement}
             onPlus={handleIncrement}
-          />
-          <CartProduct addToCart={handleAddToCart}/>
+          />{
+            status === "authenticated" ? <CartProduct addToCart={handleAddToCart}/> : <CartProduct addToCart={() => redirect("/public/auth")}/>
+          }
         </div>
       </CardFooter>
     </Card>

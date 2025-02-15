@@ -12,6 +12,7 @@ model User {
   id            String    @id @default(uuid())
   name          String?
   email         String?   @unique
+  image         String?
   emailVerified DateTime?
   role          Role      @default(CUSTOMER)
   createdAt     DateTime  @default(now())
@@ -96,7 +97,7 @@ model Cart {
   userId    String?    @unique
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  amount Float
+  amount    Float
   itemsCart ItemCart[] //um array de produtos (cada item do carrinho)
   order     Order? //conecta o carrinho com o Pedido
   user      User?      @relation(fields: [userId], references: [id])
@@ -117,14 +118,14 @@ model ItemCart {
 }
 
 model Order {
-  id        String          @id @default(uuid())
-  userId    String?
-  cartId    String?         @unique
-  amount    Float
-  status    OrderStatusEnum @default(PENDING)
-  orderDate DateTime        @default(now())
-  itemsOrder     ItemOrder[] //array de itens do pedido
-  payment   Payment?
+  id         String          @id @default(uuid())
+  userId     String?
+  cartId     String?         @unique
+  amount     Float
+  status     OrderStatusEnum @default(PENDING)
+  orderDate  DateTime        @default(now())
+  itemsOrder ItemOrder[] //array de itens do pedido
+  payment    Payment?
 
   user User? @relation(fields: [userId], references: [id])
   cart Cart? @relation(fields: [cartId], references: [id])
