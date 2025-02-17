@@ -44,11 +44,12 @@ export const CartHeader = () => {
           <Icons.cart className="h-4 w-4" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="h-full flex flex-col justify-between custom-bg">
+      <SheetContent side="left" className="h-full w-full flex flex-col justify-between custom-bg ">
         <div className="flex flex-col gap-4">
         <SheetHeader className="mb-6">
           <SheetTitle className="text-white">Meu carrinho</SheetTitle>
         </SheetHeader>
+        <div className="h-[calc(100vh-200px)] flex flex-col gap-4 overflow-y-auto scrollbar">
          {
           itemsCart.map((item) => (
             <ItemCart 
@@ -60,14 +61,13 @@ export const CartHeader = () => {
             />
           ))
          }
+         </div>
         </div>
-        <div className="flex flex-col gap-4">
-          <div className="flex justify-between text-primary">
+          <div className="flex justify-between text-primary mb-6">
             <span className="text-xl font-semibold">Total:</span>
             <SheetDescription className="text-xl font-semibold"><span className="text-sm mr-1 font-thin">R$</span>{totalItemsPrice.toFixed(2)}</SheetDescription>
           </div>
           <ButtonCheckout />
-        </div>
       </SheetContent>
       
     </Sheet>

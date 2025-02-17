@@ -31,17 +31,16 @@ export const ProductCard = ({product}: ProductCardProps) => {
     }
   }
   return (
-    <Card className="max-w-xs min-h-full card-border flex flex-col justify-between mt-8">
-      <div className="-mt-7">
-        <Image
-          src={product.imageUrl || "/placeholder.svg?height=200&width=200"}
-          alt={product.name}
-          width={200}
-          height={200}
-          className=" rounded-t-lg mx-auto"
-        />
-      </div>
-      <CardHeader className="w-full">
+    <Card className="min-h-[500px] p-4 card-border flex flex-col justify-between mt-20">
+      <Image
+        src={product.imageUrl || "/placeholder.svg?height=200&width=200"}
+        alt={product.name}
+        width={200}
+        height={200}
+        loading="eager"
+        className="mx-auto object-cover h-40 w-40 -mt-20 rounded-full"
+      />
+      <CardHeader>
         <CardTitle className="w-min m-auto px-4 text-lg uppercase text-primary bg-primary/20 font-semibold text-center rounded-full">
           {product.category}
           {

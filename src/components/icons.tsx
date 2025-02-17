@@ -1,4 +1,4 @@
-import { Loader2, LogIn, LogOut, ShoppingCart, Plus, Minus } from 'lucide-react'
+import { Loader2, LogIn, LogOut, ShoppingCart, Plus, Minus, Trash } from 'lucide-react'
 
 export const Icons = {
   spinner: Loader2,
@@ -6,5 +6,6 @@ export const Icons = {
   logout: LogOut,
   cart: ShoppingCart,
   plus: Plus,
-  minus: Minus
+  minus: Minus,
+  trash: Trash
 }

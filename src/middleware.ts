@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
   // Rota de login
   if (request.nextUrl.pathname.startsWith("/public/auth")) {
     if (session) {
-      return NextResponse.redirect(new URL("/", request.url)); // Redireciona admins para admin
+      return NextResponse.redirect(new URL("/", request.url));
     }
     return NextResponse.next();
   }

@@ -16,6 +16,7 @@ import axios from "axios"
 
 export function ProductForm() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
 
   const form = useForm<ProductType>({
     resolver: zodResolver(productSchema),
@@ -31,13 +32,17 @@ export function ProductForm() {
 
   const handleUploadImage = async (file: File, onChange: (url: string) => void) => {
     const formData = new FormData()
-    console.log(process.env.CLOUDINARY_NAME);
+
+    const reader = new FileReader();
+    reader.onloadend = () => setPreview(reader.result as string);
+    reader.readAsDataURL(file);
     
     formData.append("file", file); // Arquivo a ser enviado
     formData.append("upload_preset", "product_images");
     try {
 
-      const response = await axios.post(`https://api.cloudinary.com/v1_1/dgcjyc8an/image/upload`, 
+      const response = await axios.post(
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`, 
         formData,
       );
   
@@ -60,8 +65,7 @@ export function ProductForm() {
       })
     }
    
-  
-}
+  }
 
   async function onSubmit(data: ProductType) {
     try {
@@ -166,7 +170,7 @@ export function ProductForm() {
             name="imageUrl"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Image URL</FormLabel>
+                <FormLabel>Selecione uma imagem</FormLabel>
                 <FormControl>
                   <Input 
                     // placeholder="https://example.com/image.jpg"
@@ -186,6 +190,12 @@ export function ProductForm() {
               </FormItem>
             )}
           />
+
+          {preview && (
+            <div className="mt-4">
+              <img src={preview} alt="Preview" className="w-full h-auto  object-cover" />
+            </div>
+          )}
 
           <Button type="submit" className="w-full">
             Create Product

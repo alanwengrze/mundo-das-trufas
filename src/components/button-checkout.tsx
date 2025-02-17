@@ -23,7 +23,7 @@ export function ButtonCheckout() {
   }
   return(
     <Button 
-      className="w-full text-white"
+      className="w-[calc(100%-3rem)] text-white fixed bottom-2 right-2/4 translate-x-2/4"
       onClick={handleCheckout}
       disabled={loading}
     >

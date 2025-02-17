@@ -22,6 +22,7 @@ export class ItemsCartService extends BaseService {
 
     if(itemExists){
       const attQuantity = itemExists.quantity + quantity;
+      if(attQuantity > product.quantityInStock) throw new AppError("Quantidade indisponível no estoque.");
       return this.itemsCartRepository.updateQuantity(itemExists.id, attQuantity);
     }
 
