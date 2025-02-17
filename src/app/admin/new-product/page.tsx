@@ -1,6 +1,6 @@
 "use client"
 
-import { ProductForm } from "@/components/new-product-form"
+import { ProductForm } from "./new-product-form"
 
 export default function NewProduct() {
   return (

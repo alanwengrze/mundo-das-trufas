@@ -36,12 +36,13 @@ export const CartHeader = () => {
 
   const totalItemsPrice = itemsCart.reduce((total, item) => total + item.product.price * item.quantity, 0);
 
-
   return (
     <Sheet>
       <SheetTrigger asChild> 
-        <Button className="">
+        <Button className="relative">
+          <div className="absolute -top-2 -right-2 rounded-full bg-primary text-white w-5 h-5 flex items-center justify-center">{itemsCart.length}</div> 
           <Icons.cart className="h-4 w-4" />
+          <p>Produtos</p>
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="h-full w-full flex flex-col justify-between custom-bg ">

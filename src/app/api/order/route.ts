@@ -96,6 +96,7 @@ export async function GET() {
   if (!session?.user?.id) {
     throw new AppError("Usuário nao autenticado.");
   }
+  console.log("/Orders Usuario autenticado", session.user.id)
 
   try {
     const orders = await prisma.order.findMany({

@@ -1,9 +1,12 @@
 "use client"
+
 import useSWR from "swr";
 import { OrderType } from "@/schemas/order.schema";
 import { api } from "@/lib/axios";
 import { useSession } from "next-auth/react";
-import { Order } from "@/components/order";
+import { DataTable } from "./data-table";
+import { columns } from "./columns";
+
 export default function Orders() {
   const { status } = useSession();
   const { data: orders } = useSWR<OrderType[]>(
@@ -13,12 +16,14 @@ export default function Orders() {
           return response.data;
         }
   );
+
   return (
-    <div>
-      <h1>Orders</h1>
-      {orders?.map((order) => (
-        <Order key={order.orderDate.toString()} order={order} />
-      ))}
+    <div className="container mx-auto py-10">
+      <div></div>  
+      <DataTable 
+        columns={columns} 
+        data={orders || []} 
+      />
     </div>
   );
 }

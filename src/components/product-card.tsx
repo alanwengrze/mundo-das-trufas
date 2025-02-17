@@ -41,7 +41,7 @@ export const ProductCard = ({product}: ProductCardProps) => {
         className="mx-auto object-cover h-40 w-40 -mt-20 rounded-full"
       />
       <CardHeader>
-        <CardTitle className="w-min m-auto px-4 text-lg uppercase text-primary bg-primary/20 font-semibold text-center rounded-full">
+        <CardTitle className="w-min m-auto px-4 text-lg uppercase text-rose-400 bg-rose-200 border border-rose-400 font-semibold text-center rounded-md">
           {product.category}
           {
             product.quantityInStock <= 0 && <span className="text-rose-500 ml-2 font-thin">Indisponível</span>
