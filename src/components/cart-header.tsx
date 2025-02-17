@@ -15,9 +15,9 @@ import {
 import { useSession } from "next-auth/react";
 import { useCart } from "@/contexts/cart-context";
 import { ButtonCheckout } from "./button-checkout";
-
+import {Spinner} from "./spinner";
 export const CartHeader = () => {
-  const {itemsCart, error, removeFromCart, changeQuantity} = useCart();
+  const {itemsCart, error, removeFromCart, changeQuantity, loading} = useCart();
   const { status } = useSession();
 
   function handleRemoveItem(productId: string) {
@@ -32,7 +32,6 @@ export const CartHeader = () => {
   if (status === "loading") return <p>Carregando...</p>;
   if (status === "unauthenticated") return <p>Por favor, faça login para ver seu carrinho.</p>;
   if (error) return <p>Erro: {error}</p>;
-  if (itemsCart.length === 0) return <p>Seu carrinho está vazio.</p>;
 
   const totalItemsPrice = itemsCart.reduce((total, item) => total + item.product.price * item.quantity, 0);
 
@@ -40,8 +39,11 @@ export const CartHeader = () => {
     <Sheet>
       <SheetTrigger asChild> 
         <Button className="relative">
-          <div className="absolute -top-2 -right-2 rounded-full bg-primary text-white w-5 h-5 flex items-center justify-center">{itemsCart.length}</div> 
-          <Icons.cart className="h-4 w-4" />
+          <div className="absolute -top-2 -right-2 rounded-full bg-primary text-white w-5 h-5 flex items-center justify-center">{itemsCart.length}</div>
+          {
+            loading ? <Spinner /> : <Icons.cart className="h-4 w-4" />
+          }
+          
           <p>Produtos</p>
         </Button>
       </SheetTrigger>
@@ -56,6 +58,7 @@ export const CartHeader = () => {
             <ItemCart 
               key={item.product.id} 
               itemCart={item}
+              disabled={loading}
               onRemoveItem={() => handleRemoveItem(item.productId)}
               onIncrementQuantity={() => handleChangeQuantity(item.productId, item.quantity + 1)}
               onDecrementQuantity={() => handleChangeQuantity(item.productId, item.quantity - 1)}

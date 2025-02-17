@@ -1,5 +1,4 @@
 import { Button } from "./ui/button";
-
 interface ButtonNavigationProps {
   
   onNavigation: () => void

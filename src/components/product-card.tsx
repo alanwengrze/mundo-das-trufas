@@ -1,3 +1,5 @@
+"use client"
+
 import Image from "next/image"
 import { CartProduct } from "./cart-product"
 import { Card, CardContent,  CardFooter, CardHeader, CardTitle } from "./ui/card"
@@ -6,7 +8,7 @@ import { useState } from "react"
 import { FullProductType } from "@/schemas/product.schema"
 import { useSession } from "next-auth/react"
 import { useCart } from "@/contexts/cart-context"
-import { redirect } from "next/navigation"
+import { useRouter } from "next/navigation"
 interface ProductCardProps {
   product: FullProductType
 }
@@ -15,6 +17,7 @@ export const ProductCard = ({product}: ProductCardProps) => {
   const { status } = useSession();
   const {addToCart} = useCart()
   const [quantity, setQuantity] = useState(1);
+  const { push } = useRouter();
 
   function handleAddToCart() {
     addToCart(product.id, quantity);
@@ -60,7 +63,7 @@ export const ProductCard = ({product}: ProductCardProps) => {
             onMinus={handleDecrement}
             onPlus={handleIncrement}
           />{
-            status === "authenticated" ? <CartProduct addToCart={handleAddToCart}/> : <CartProduct addToCart={() => redirect("/public/auth")}/>
+            status === "authenticated" ? <CartProduct addToCart={handleAddToCart}/> : <CartProduct addToCart={() => push("/public/auth")}/>
           }
         </div>
       </CardFooter>

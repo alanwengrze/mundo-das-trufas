@@ -1,6 +1,6 @@
 "use client"
 
-import { useContext, createContext } from "react";
+import { useContext, createContext, useState } from "react";
 import { ItemCartType } from "@/schemas/itemCart.schema";
 import { api } from "@/lib/axios";
 import useSWR from "swr";
@@ -12,6 +12,7 @@ interface CartContextType {
   removeFromCart: (productId: string) => void;
   changeQuantity: (productId: string, quantity: number) => void;
   error: string | null;
+  loading: boolean
 }
 
 export const CartContext = createContext({} as CartContextType);
@@ -20,12 +21,13 @@ interface CartProviderProps {
 }
 export function CartProvider({ children }: CartProviderProps) {
   const { status } = useSession();
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   // Busca os itens do carrinho
   const { data: itemsCart, error, mutate } = useSWR<ItemCartType[]>(
     status === "authenticated" ? "/cart" : null,
     async (url: string) => {
+      setLoading(false);
       const response = await api.get(url);
       return response.data;
     }
@@ -34,18 +36,21 @@ export function CartProvider({ children }: CartProviderProps) {
   // Adiciona um produto ao carrinho
   async function addToCart(productId: string, quantity: number) {
    try {
+    setLoading(true);
     await api.post(`/cart/items`, {
       productId,
       quantity
     });
     mutate();
    } catch (error) {
+    setLoading(false);
      console.error(error);
    }
   }
 
   async function removeFromCart(productId: string) {
     try {
+      setLoading(true);
       await api.delete(`/cart/items/${productId}`);
       mutate();
     }catch (err) {
@@ -54,6 +59,7 @@ export function CartProvider({ children }: CartProviderProps) {
   }
 
   async function changeQuantity(productId: string, quantity: number) {
+    setLoading(true);
     try {
       await api.patch(`/cart/items/${productId}`, {
         quantity
@@ -72,7 +78,8 @@ export function CartProvider({ children }: CartProviderProps) {
         addToCart,
         changeQuantity,
         removeFromCart,
-        error: error?.message || null
+        error: error?.message || null,
+        loading
       }}
     >
       {children}

@@ -10,12 +10,10 @@ import { Icons } from "@/components/icons"
 
 export default function AuthPage() {
 
-  // Initialize React Hook Form
   const { handleSubmit, formState } = useForm()
   const { isSubmitting } = formState
 
   async function onSubmit() {
-    console.log("submit")
     try {
       await signIn('google')
     } catch (error) {
@@ -35,7 +33,10 @@ export default function AuthPage() {
         </CardHeader>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <CardFooter>
-              <Button className="w-full bg-red-400" >
+              <Button 
+                className="w-full bg-red-400" 
+                disabled={isSubmitting}
+              >
                 { isSubmitting && (
                   <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                 )}

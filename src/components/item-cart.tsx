@@ -10,8 +10,9 @@ interface ItemCartProps {
   onRemoveItem: () => void
   onDecrementQuantity: () => void
   onIncrementQuantity: () => void
+  disabled: boolean
 }
-export const ItemCart = ({itemCart, onRemoveItem, onDecrementQuantity, onIncrementQuantity}: ItemCartProps) => {
+export const ItemCart = ({itemCart, onRemoveItem, onDecrementQuantity, onIncrementQuantity, disabled}: ItemCartProps) => {
 
   return(
     <Card className="pt-4 rounded-md text-white">
@@ -42,7 +43,12 @@ export const ItemCart = ({itemCart, onRemoveItem, onDecrementQuantity, onIncreme
               onMinus={onDecrementQuantity}
               onPlus={onIncrementQuantity}
             />
-            <Button onClick={onRemoveItem}><Icons.trash className="h-4 w-4" /></Button>
+            <Button 
+              onClick={onRemoveItem}
+              disabled={disabled}
+            >
+              <Icons.trash className="h-4 w-4" />
+            </Button>
           </div>
         </CardFooter>
       </CardContent>
