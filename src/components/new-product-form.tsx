@@ -12,6 +12,7 @@ import { api } from "@/lib/axios"
 import { toast } from "sonner"
 import { useState } from "react"
 import axios from "axios"
+import Image from "next/image"
 
 
 export function ProductForm() {
@@ -193,7 +194,13 @@ export function ProductForm() {
 
           {preview && (
             <div className="mt-4">
-              <img src={preview} alt="Preview" className="w-full h-auto  object-cover" />
+              <Image 
+                src={preview}
+                alt="Preview"
+                width={100}
+                height={100}
+                className="w-full mx-auto object-cover"
+              />
             </div>
           )}
 

@@ -20,10 +20,10 @@ export function ProductProvider({ children }: ProductProviderProps) {
   const [loading, setLoading] = useState(true);
 
   // Busca os itens do carrinho
-  const { data: products, error, isLoading} = useSWR<FullProductType[]>(
+  const { data: products, error} = useSWR<FullProductType[]>(
     "/products",
     async (url: string) => {
-      isLoading && setLoading(false);
+      setLoading(false);
       const response = await api.get(url);
       return response.data;
     }
