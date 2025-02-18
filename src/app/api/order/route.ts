@@ -51,11 +51,13 @@ export async function POST(request: Request) {
 
     const amountPrice = cart.itemsCart.reduce((total, item) => total + item.quantity * item.product.price, 0);
 
+    const customerAddress = sessionStripe.metadata?.addressId;
+
     // Cria a ordem com os dados do carrinho
     const order = await prisma.order.create({
       data: {
         userId: session.user.id,
-        addressId: sessionStripe.metadata?.addressId!,
+        addressId: customerAddress || "",
         status: paymentStatus === "paid" ? "COMPLETED" : "PENDING",
         amount: amountPrice,
         itemsOrder: {

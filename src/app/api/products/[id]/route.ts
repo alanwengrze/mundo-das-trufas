@@ -35,11 +35,11 @@ export async function PUT(req: NextRequest){
   return NextResponse.json(product, {status: 200});
 }
 
-export async function DELETE(req: NextRequest){
+// export async function DELETE(req: NextRequest){
 
-}
+// }
 
-//att estoque
-export async function PATCH(req: NextRequest){
+// //att estoque
+// export async function PATCH(req: NextRequest){
 
-}
+// }

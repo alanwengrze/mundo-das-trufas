@@ -27,7 +27,7 @@ import type { FullCategoryType } from "@/schemas/category.schema"
 export function ProductForm() {
 
   //buscar as categorias
-  const { data: categories, error} = useSWR<[FullCategoryType]>(
+  const { data: categories} = useSWR<[FullCategoryType]>(
     "/categories",
     async (url: string) => {
       const response = await api.get(url);

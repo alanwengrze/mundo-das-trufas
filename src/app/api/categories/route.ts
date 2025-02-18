@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import { handleError } from "@/middlewares/error-handler";
 import { CategoriesService } from "@/services/categories.service";
-export async function GET(req: NextRequest) {
+export async function GET() {
   const categoriesService = new CategoriesService();
   try {
     const categories = await categoriesService.findAll();
