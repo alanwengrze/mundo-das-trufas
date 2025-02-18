@@ -1,6 +1,5 @@
 "use client";
 
-import { Icons } from "./icons";
 import { ItemCart } from "./item-cart";
 import { Button } from "./ui/button";
 import {
@@ -16,8 +15,14 @@ import { useSession } from "next-auth/react";
 import { useCart } from "@/contexts/cart-context";
 import { ButtonCheckout } from "./button-checkout";
 import {Spinner} from "./spinner";
-export const CartHeader = () => {
-  const {itemsCart, error, removeFromCart, changeQuantity, loading} = useCart();
+
+interface CartHeaderProps {
+  text?: string
+  icon?: React.ReactNode
+  variant?: "default" | "ghost"
+}
+export const CartHeader = ({ text, icon, variant}: CartHeaderProps) => {
+  const { itemsCart, error, removeFromCart, changeQuantity, loading} = useCart();
   const { status } = useSession();
 
   function handleRemoveItem(productId: string) {
@@ -28,7 +33,6 @@ export const CartHeader = () => {
     changeQuantity(productId, quantity);
   }
 
-
   if (status === "loading") return <p>Carregando...</p>;
   if (status === "unauthenticated") return <p>Por favor, faça login para ver seu carrinho.</p>;
   if (error) return <p>Erro: {error}</p>;
@@ -37,17 +41,16 @@ export const CartHeader = () => {
 
   return (
     <Sheet>
-      <SheetTrigger asChild> 
-        <Button className="relative">
-          <div className="absolute -top-2 -right-2 rounded-full bg-primary text-white w-5 h-5 flex items-center justify-center">{itemsCart.length}</div>
+      <SheetTrigger asChild>
+        <Button className="relative gap-0" variant={variant}>
+          <div className="absolute z-10 -top-2 -right-2 rounded-full bg-primary text-white w-5 h-5">{itemsCart.length}</div>
           {
-            loading ? <Spinner /> : <Icons.cart className="h-4 w-4" />
+            loading ? <Spinner /> : <>{icon}</>
           }
-          
-          <p>Produtos</p>
+          <p>{text}</p>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="h-full w-full flex flex-col justify-between custom-bg ">
+      <SheetContent side="left" className="z-50 h-full w-full flex flex-col justify-between custom-bg ">
         <div className="flex flex-col gap-4">
         <SheetHeader className="mb-6">
           <SheetTitle className="text-white">Meu carrinho</SheetTitle>

@@ -9,6 +9,7 @@ import { FullProductType } from "@/schemas/product.schema"
 import { useSession } from "next-auth/react"
 import { useCart } from "@/contexts/cart-context"
 import { useRouter } from "next/navigation"
+import { priceFormatter } from "@/utils/dateFormatter"
 interface ProductCardProps {
   product: FullProductType
 }
@@ -34,7 +35,7 @@ export const ProductCard = ({product}: ProductCardProps) => {
     }
   }
   return (
-    <Card className="min-h-[500px] p-4 card-border flex flex-col justify-between mt-20">
+    <Card className="min-h-[350px] px-4 card-border flex flex-col items-center mt-20">
       <Image
         src={product.imageUrl || "/placeholder.svg?height=200&width=200"}
         alt={product.name}
@@ -43,30 +44,35 @@ export const ProductCard = ({product}: ProductCardProps) => {
         loading="eager"
         className="mx-auto object-cover h-40 w-40 -mt-20 rounded-full"
       />
+      
+      <CardContent className="flex flex-col items-center gap-10">
       <CardHeader>
-        <CardTitle className="w-min m-auto px-4 text-lg uppercase text-rose-400 bg-rose-200 border border-rose-400 font-semibold text-center rounded-md">
-          {product.category}
-          {
-            product.quantityInStock <= 0 && <span className="text-rose-500 ml-2 font-thin">Indisponível</span>
-          }
+        <CardTitle className="m-auto px-4 text-lg uppercase text-rose-400 bg-rose-200 border border-rose-400 font-semibold text-center rounded-md">
+          {product.category.name}
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col items-center justify-center">
-        <h1 className="text-2xl capitalize">{product.name}</h1>
-        <span className="mt-2 text-sm text-muted-foreground font-medium capitalize">{product.description}</span>
-      </CardContent>
-      <CardFooter className="flex justify-between items-center gap-3">
-        <p className="text-xl text-muted-foreground font-semibold"><span className="text-sm mr-1 font-thin">R$</span>{product.price}</p>
-        <div className="flex items-center gap-3">
-          <Buy 
-            quantity={quantity}
-            onMinus={handleDecrement}
-            onPlus={handleIncrement}
-          />{
-            status === "authenticated" ? <CartProduct addToCart={handleAddToCart}/> : <CartProduct addToCart={() => push("/public/auth")}/>
+        <h1 className="text-xl capitalize text-center">{product.name}</h1>
+          {
+            product.quantityInStock <= 0 ? (
+              <span className="text-rose-500 ml-2 font-thin">Indisponível</span>
+            ) : (
+              <CardFooter className="flex justify-between items-center gap-3">
+              <p className="text-xl text-muted-foreground font-semibold">{priceFormatter.format(product.price)}</p>
+              <div className="flex items-center gap-3">
+                <Buy 
+                  quantity={quantity}
+                  onMinus={handleDecrement}
+                  onPlus={handleIncrement}
+                />{
+                  status === "authenticated" ? <CartProduct addToCart={handleAddToCart}/> : <CartProduct addToCart={() => push("/public/auth")}/>
+                }
+              </div>
+            </CardFooter>
+            )
           }
-        </div>
-      </CardFooter>
+          
+      </CardContent>
+     
     </Card>
   )
 }

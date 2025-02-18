@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma";
 
 export class ItemsCartRepository {
-
   async verifyIfItemExists(productId: string, cartId: string) {
     const item = await prisma.itemCart.findFirst({
       where: {

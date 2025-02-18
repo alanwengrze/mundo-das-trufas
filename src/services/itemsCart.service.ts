@@ -1,6 +1,6 @@
-import { ItemsCartRepository } from "@/repositories/itemsCart-repository";
+import { ItemsCartRepository } from "@/repositories/itemsCart.repository";
 
-import { BaseService } from "./base-service";
+import { BaseService } from "./base.service";
 import { AppError } from "@/errors/app-error";
 
 export class ItemsCartService extends BaseService {

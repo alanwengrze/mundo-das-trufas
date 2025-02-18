@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { CartService } from "@/services/cart-service";
+import { CartService } from "@/services/cart.service";
 import { handleError } from "@/middlewares/error-handler";
 //Retorna o carrinho do usuário autenticado
 export async function GET() {

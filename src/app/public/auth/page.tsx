@@ -22,29 +22,26 @@ export default function AuthPage() {
   }
 
   return (
-
-    <div className="w-full h-screen flex items-center justify-center">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Entrar</CardTitle>
-          <CardDescription>
-            Fazer login com Google
-          </CardDescription>
-        </CardHeader>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <CardFooter>
-              <Button 
-                className="w-full bg-red-400" 
-                disabled={isSubmitting}
-              >
-                { isSubmitting && (
-                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                Entrar com Google
-              </Button>
-            </CardFooter>
-          </form>
-      </Card>
-    </div>
+    <Card className="w-full max-w-md">
+      <CardHeader className="space-y-1">
+        <CardTitle className="text-2xl font-bold">Entrar</CardTitle>
+        <CardDescription>
+          Fazer login com Google
+        </CardDescription>
+      </CardHeader>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <CardFooter>
+            <Button 
+              className="w-full bg-red-400" 
+              disabled={isSubmitting}
+            >
+              { isSubmitting && (
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              Entrar com Google
+            </Button>
+          </CardFooter>
+        </form>
+    </Card>
   )
 }

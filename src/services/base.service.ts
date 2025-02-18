@@ -1,17 +1,17 @@
 import { auth } from "@/auth";
-import { CartRepository } from "@/repositories/cart-repository";
-import { ProductRepository } from "@/repositories/products-repository";
+import { CartRepository } from "@/repositories/cart.repository";
+import { ProductsRepository } from "@/repositories/products.repository";
 export class BaseService {
   protected cartRepository: CartRepository;
-  protected productRepository: ProductRepository;
+  protected productRepository: ProductsRepository;
   constructor() {
     this.cartRepository = new CartRepository();
-    this.productRepository = new ProductRepository();
+    this.productRepository = new ProductsRepository();
   }
   
   protected async getUserId(): Promise<string> {
     const session = await auth();
-    if (!session?.user?.id) {
+    if (!session?.user.id) {
       throw new Error("Usuário não autenticado.");
     }
     console.log("Usuario autenticado", session.user.id)

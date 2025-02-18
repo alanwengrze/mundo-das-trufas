@@ -8,28 +8,41 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 import { api } from "@/lib/axios"
 import { toast } from "sonner"
 import { useState } from "react"
 import axios from "axios"
 import Image from "next/image"
-
+import useSWR from "swr"
+import type { FullCategoryType } from "@/schemas/category.schema"
 
 export function ProductForm() {
+
+  //buscar as categorias
+  const { data: categories, error} = useSWR<[FullCategoryType]>(
+    "/categories",
+    async (url: string) => {
+      const response = await api.get(url);
+      return response.data;
+    }
+  );
+  
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
   const form = useForm<ProductType>({
     resolver: zodResolver(productSchema),
-    defaultValues: {
-      name: "",
-      description: "",
-      price: 0,
-      imageUrl: "/placeholder.svg?height=200&width=200",
-      category: "",
-      quantityInStock: 0,
-    },
   })
+
+  form.watch("categoryId");
 
   const handleUploadImage = async (file: File, onChange: (url: string) => void) => {
     const formData = new FormData()
@@ -70,13 +83,12 @@ export function ProductForm() {
 
   async function onSubmit(data: ProductType) {
     try {
-
       await api.post("/products", {
         ...data,
         imageUrl: imageUrl
       })
       toast.success("O produto foi criado com sucesso!", {
-        description: `Um novo produto foi cadastrado na categoria ${data.category}.`,
+        description: `Um novo produto foi cadastrado com sucesso.`,
       })
     } catch (error) {
       console.error(error);
@@ -120,17 +132,30 @@ export function ProductForm() {
 
           <FormField 
             control={form.control}
-            name="category"
+            name="categoryId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Category</FormLabel>
+                <FormLabel>Categorias</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter category" {...field} />
+                  <Select onValueChange={field.onChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione uma categoria" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories?.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+
+          {/* <Button type="button">Criar uma nova categoria</Button> */}
 
           <FormField
             control={form.control}

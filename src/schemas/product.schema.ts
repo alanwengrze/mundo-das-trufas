@@ -1,4 +1,5 @@
 import  z  from "zod";
+import { categorySchema } from "./category.schema";
 
 export const productSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -6,11 +7,12 @@ export const productSchema = z.object({
   description: z.string(),
   imageUrl: z.string().url().default("/placeholder.svg?height=200&width=200"),
   quantityInStock: z.number().int().min(0),
-  category: z.string().min(1, "Category is required"),
+  categoryId: z.string(),
 });
 
 export const fullProductSchema = productSchema.extend({
   id: z.string(),
+  category: categorySchema,
   createdAt: z.date(),
   updatedAt: z.date(),
 });

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { ItemsCartService } from "@/services/itemsCart-service";
+import { ItemsCartService } from "@/services/itemsCart.service";
 import { handleError } from "@/middlewares/error-handler";
 
 // Adiciona um item ao carrinho do usuário

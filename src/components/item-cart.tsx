@@ -13,7 +13,6 @@ interface ItemCartProps {
   disabled: boolean
 }
 export const ItemCart = ({itemCart, onRemoveItem, onDecrementQuantity, onIncrementQuantity, disabled}: ItemCartProps) => {
-
   return(
     <Card className="pt-4 rounded-md text-white">
       <CardContent className="flex flex-col gap-2 ">
@@ -27,6 +26,7 @@ export const ItemCart = ({itemCart, onRemoveItem, onDecrementQuantity, onIncreme
           />
           <CardHeader>
             <CardTitle className="text-primary">{itemCart.product.name}</CardTitle>
+            <CardTitle className="text-primary">{itemCart.product.category?.name}</CardTitle>
             <CardDescription>{itemCart.product.description}</CardDescription>
           </CardHeader>
         </div>

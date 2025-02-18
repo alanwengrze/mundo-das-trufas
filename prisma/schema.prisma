@@ -21,6 +21,7 @@ model User {
   Order         Order[]
   accounts      Account[]
   sessions      Session[]
+  address       Address[]
 
   @@index([email])
   @@map("users")
@@ -29,6 +30,20 @@ model User {
 enum Role {
   CUSTOMER
   ADMIN
+}
+
+model Address {
+  id      String  @id @default(uuid())
+  street  String
+  number  String
+  city    String
+  state   String
+  zipCode String
+  userId  String
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  order   Order[]
+
+  @@map("address")
 }
 
 model Account {
@@ -74,22 +89,34 @@ model VerificationToken {
 
 model Product {
   id              String      @id @default(uuid())
+  stripeId        String?
+  categoryId      String
   name            String
   description     String
   price           Float
   discountPrice   Float?
   imageUrl        String?
-  category        String
   quantityInStock Int
   currency        String      @default("brl")
-  stripeId        String?
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   itemsCart       ItemCart[]
   itemsOrder      ItemOrder[]
+  category        Category    @relation(fields: [categoryId], references: [id])
 
-  @@index([category])
+  @@index([categoryId])
   @@map("products")
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+
+  product Product[]
+
+  @@index([name])
+  @@map("categories")
 }
 
 model Cart {
@@ -126,9 +153,11 @@ model Order {
   orderDate  DateTime        @default(now())
   itemsOrder ItemOrder[] //array de itens do pedido
   payment    Payment?
+  addressId  String
 
-  user User? @relation(fields: [userId], references: [id])
-  cart Cart? @relation(fields: [cartId], references: [id])
+  address Address @relation(fields: [addressId], references: [id])
+  user    User?   @relation(fields: [userId], references: [id])
+  cart    Cart?   @relation(fields: [cartId], references: [id])
 
   @@index([status])
   @@map("orders")

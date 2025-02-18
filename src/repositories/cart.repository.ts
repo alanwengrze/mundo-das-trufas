@@ -18,7 +18,7 @@ export class CartRepository {
       include: {
         itemsCart: {
           include: {
-            product: true, // Inclui os detalhes do produto associado a cada item do carrinho
+            product: { include: { category: true }}, // Inclui os detalhes do produto associado a cada item do carrinho
           },
         },
       },

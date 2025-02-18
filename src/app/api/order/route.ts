@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { ProductsService } from "@/services/products-service";
+import { ProductsService } from "@/services/products.service";
 import { handleError } from "@/middlewares/error-handler";
 import { AppError } from "@/errors/app-error";
 
@@ -55,6 +55,7 @@ export async function POST(request: Request) {
     const order = await prisma.order.create({
       data: {
         userId: session.user.id,
+        addressId: sessionStripe.metadata?.addressId!,
         status: paymentStatus === "paid" ? "COMPLETED" : "PENDING",
         amount: amountPrice,
         itemsOrder: {
@@ -104,7 +105,7 @@ export async function GET() {
       include: {
         itemsOrder: {
           include: {
-            product: true
+            product: {include: {category: true}}
           }
         }
       }

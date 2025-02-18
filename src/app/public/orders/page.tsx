@@ -19,7 +19,7 @@ export default function Orders() {
 
   return (
     <div className="container mx-auto py-10">
-      <div></div>  
+      <h2 className="text-2xl font-bold mb-8">Meus pedidos</h2>
       <DataTable 
         columns={columns} 
         data={orders || []} 
