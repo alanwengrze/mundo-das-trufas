@@ -8,6 +8,7 @@ export const productSchema = z.object({
   imageUrl: z.string().url().default("/placeholder.svg?height=200&width=200"),
   quantityInStock: z.number().int().min(0),
   categoryId: z.string(),
+  stripeId: z.string().optional(),
 });
 
 export const fullProductSchema = productSchema.extend({

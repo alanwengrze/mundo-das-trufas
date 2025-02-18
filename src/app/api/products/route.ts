@@ -1,7 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { ProductsService } from "@/services/products.service";
 import { handleError } from "@/middlewares/error-handler";
-
 export async function POST(req: NextRequest) {
 
   try {
