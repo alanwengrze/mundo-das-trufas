@@ -82,6 +82,7 @@ export function ProductForm() {
   }
 
   async function onSubmit(data: ProductType) {
+    console.log("Data:", data);
     try {
       await api.post("/products", {
         ...data,

@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
 import type { ProductType } from "@/schemas/product.schema";
-import { stripe } from "@/lib/stripe";
 
 export class ProductsRepository {
   async findAll() {
@@ -32,29 +31,6 @@ export class ProductsRepository {
 
   async create(product: ProductType) {
 
-    const category = await prisma.category.findUnique({
-      where: { id: product.categoryId },
-    });
-
-    if (!category) {
-      throw new Error("Categoria não encontrada.");
-    }
-
-    const stripeProduct = await stripe.products.create({
-      name: product.name,
-      default_price_data: {
-        currency: "brl",
-        unit_amount: Math.round(product.price * 100),
-      },
-      description: product.description,
-      images: [product.imageUrl],
-      metadata: {
-        category: category.name,
-        quantity: product.quantityInStock.toString(),
-      },
-    })
-
-
     const newProduct = await prisma.product.create({ 
       data: {
         name: product.name,
@@ -63,7 +39,7 @@ export class ProductsRepository {
         imageUrl: product.imageUrl,
         categoryId: product.categoryId,
         quantityInStock: product.quantityInStock,
-        stripeId: stripeProduct.id,
+        stripeId: product.stripeId,
       },
     });
     return newProduct;

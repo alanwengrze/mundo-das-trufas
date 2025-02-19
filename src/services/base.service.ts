@@ -1,12 +1,16 @@
 import { auth } from "@/auth";
+import { AppError } from "@/errors/app-error";
 import { CartRepository } from "@/repositories/cart.repository";
+import { CategoriesRepository } from "@/repositories/categories.repository";
 import { ProductsRepository } from "@/repositories/products.repository";
 export class BaseService {
   protected cartRepository: CartRepository;
   protected productRepository: ProductsRepository;
+  protected categoriesRepository: CategoriesRepository
   constructor() {
     this.cartRepository = new CartRepository();
     this.productRepository = new ProductsRepository();
+    this.categoriesRepository = new CategoriesRepository
   }
   
   protected async getUserId(): Promise<string> {
@@ -37,5 +41,13 @@ export class BaseService {
 
     if (!cart) throw new Error("Carrinho nao encontrado");
     return cart;
+  }
+
+  protected async getCategory(categoryId: string){
+    const category = await this.categoriesRepository.findById(categoryId)
+
+    if(!category) throw new AppError("Categoria não encontrada", 404)
+
+    return category
   }
 }
