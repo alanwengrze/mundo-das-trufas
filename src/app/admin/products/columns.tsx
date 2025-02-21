@@ -3,11 +3,11 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { priceFormatter } from "@/utils/dateFormatter"
 import clsx from "clsx"
-import { useRouter } from "next/navigation"
 import { api } from "@/lib/axios"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import type { ProductType } from "@/schemas/product.schema"
+import Link from "next/link"
 
 import { 
   DropdownMenuItem,
@@ -94,9 +94,7 @@ export const columns: ColumnDef<ProductType>[] = [
       const value = getValue()
       const id = value as string
 
-      const {push} = useRouter()
-
-      const handleView = () => push(`/public/products/${id}`)
+   
      const handleDelete = async () => {
        try {
          await api.delete(`/products/${id}`);
@@ -108,10 +106,12 @@ export const columns: ColumnDef<ProductType>[] = [
 
       return (
         <MoreAction> 
-          <DropdownMenuItem onClick={handleView}>
-            <Button variant="ghost" size="sm">
-              Visualizar
-            </Button>
+          <DropdownMenuItem asChild>
+            <Link href={`/admin/products/${id}`}>
+              <Button variant="ghost" size="sm">
+                Visualizar
+              </Button>
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleDelete}>
             <Button variant="destructive" size="sm">
