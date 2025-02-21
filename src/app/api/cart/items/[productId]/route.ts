@@ -20,9 +20,10 @@ export async function DELETE( req: Request) {
     return handleError(error);
   }
 }
-export async function PATCH(request: Request, { params }: { params: { productId: string } }) {
-  const { productId } = await params;
-  const { quantity } = await request.json();
+export async function PATCH(req: Request) {
+  const url = new URL(req.url);
+  const productId = url.pathname.split("/").pop();
+  const { quantity } = await req.json();
   const itemsCartService = new ItemsCartService();
 
   try {
