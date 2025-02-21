@@ -3,8 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { ProductsService } from "@/services/products.service";
 import { handleError } from "@/middlewares/error-handler";
 
-export async function GET( { params }: { params: { id: string } }) {
-
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+  console.log(req);
   const {id} = await params;
 
   const productService = new ProductsService();
@@ -34,8 +34,8 @@ export async function PUT(req: NextRequest){
   return NextResponse.json(product, {status: 200});
 }
 
-export async function DELETE( { params }: { params: { id: string } }) {
-
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  console.log(req);
   const {id} = await params;
 
   const productService = new ProductsService();

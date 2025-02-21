@@ -108,8 +108,6 @@ export function ProductForm() {
     }
   }
 
-  const imageUrlValue = form.watch("imageUrl");
-
   return (
     <div className="max-w-2xl mx-auto p-6 space-y-8">
       <Form {...form}>

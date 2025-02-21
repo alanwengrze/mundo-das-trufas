@@ -5,11 +5,11 @@ import { OrderType } from "@/schemas/order.schema"
 import { priceFormatter, dateFormatter } from "@/utils/dateFormatter"
 import clsx from "clsx"
 
-import { useRouter } from "next/navigation"
 import { api } from "@/lib/axios"
 import { MoreAction } from "@/components/more-action"
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 export const columns: ColumnDef<OrderType>[] = [
   {
     accessorKey: "status",
@@ -52,14 +52,11 @@ export const columns: ColumnDef<OrderType>[] = [
   },
   {
     accessorKey: "id",
-    header: () => <div >Ações</div>,
+    header: () => <div>Ações</div>,
     cell: ({getValue})=> {
       const value = getValue()
       const id = value as string
 
-      const {push} = useRouter()
-
-      const handleView = () => push(`/public/orders/${id}`)
      const handleDelete = async () => {
        try {
          await api.delete(`/order/${id}`);
@@ -72,9 +69,9 @@ export const columns: ColumnDef<OrderType>[] = [
       return (
         <MoreAction>
            <DropdownMenuItem
-            onClick={handleView}
+            asChild
           >
-            Visualizar
+            <Link href={`/public/orders/${id}`}>Visualizar</Link>
           </DropdownMenuItem>
           <DropdownMenuItem
             asChild

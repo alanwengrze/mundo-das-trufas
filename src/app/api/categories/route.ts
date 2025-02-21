@@ -22,6 +22,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(category, { status: 201 });
 
   } catch (error) {
-    return NextResponse.json({ error: "Erro ao criar categoria" }, { status: 500 });
+    return handleError(error);
   }
 }

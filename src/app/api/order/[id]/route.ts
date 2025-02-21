@@ -3,7 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { handleError } from "@/middlewares/error-handler";
 import { NextResponse } from "next/server";
 
-export async function GET({ params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: { id: string } }) {
+  console.log(req);
   try {
     const { id } = await params;
     if(!id) throw new AppError("O pedido não foi encontrado.");
@@ -32,7 +33,8 @@ export async function GET({ params }: { params: { id: string } }) {
   }
 }
 
-export async function DELETE( { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+  console.log(req);
   try {
     const {id} = await params;
 

@@ -12,7 +12,7 @@ import { Separator } from "@radix-ui/react-separator";
 import { priceFormatter } from "@/utils/dateFormatter";
 import { VoidCart } from "./void-cart";
 export const CartSummary = () => {
-  const { itemsCart, error, removeFromCart, changeQuantity, loading} = useCart();
+  const { itemsCart, error, removeFromCart, changeQuantity} = useCart();
   const { status } = useSession();
   function handleRemoveItem(productId: string) {
     removeFromCart(productId);

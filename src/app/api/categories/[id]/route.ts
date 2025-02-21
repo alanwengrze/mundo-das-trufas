@@ -3,8 +3,8 @@ import { handleError } from "@/middlewares/error-handler";
 import { AppError } from "@/errors/app-error";
 import { NextResponse } from "next/server";
 
-export async function DELETE( { params }: { params: { id: string } }) {
-
+export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+  console.log(req);
   const { id } = await params;
   const categoriesService = new CategoriesService();
   
