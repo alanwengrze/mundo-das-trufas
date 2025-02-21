@@ -3,8 +3,8 @@ import { ItemsCartService } from "@/services/itemsCart.service";
 import { handleError } from "@/middlewares/error-handler";
 import { AppError } from "@/errors/app-error";
 // Remover item do carrinho
-export async function DELETE( { params }: { params: { productId: string } }) {
-
+export async function DELETE( req: Request, { params }: { params: { productId: string } }) {
+  console.log(req);
   const { productId } = await params;
   const itemsCartService = new ItemsCartService();
 
