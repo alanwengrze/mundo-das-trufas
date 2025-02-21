@@ -1,11 +1,8 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
+import { stripe } from "@/lib/stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-12-18.acacia",
-});
 
 export async function POST() {
   const session = await auth();
@@ -44,6 +41,17 @@ export async function POST() {
       quantity: item.quantity,
     }));
 
+    const address = await prisma.address.findFirst({
+      where: { userId: cart.userId || session.user.id },
+    });
+
+    if (!address) {
+      return NextResponse.json(
+        { error: "Endereço nao encontrado." },
+        { status: 400 }
+      );
+    }
+
     // Criar a sessão de checkout no Stripe
     const stripeSession = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -51,8 +59,14 @@ export async function POST() {
       mode: "payment",
       success_url: `${process.env.NEXT_PUBLIC_URL}/public/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_URL}/`,
-      metadata: { userId: session.user.id },
+      metadata: { 
+        userId: session.user.id,
+        cartId: cart.id,
+        addressId: address.id,
+      },
     });
+
+    console.log("Sessão Stripe criada:", stripeSession);
 
     return NextResponse.json({ url: stripeSession.url }, { status: 200 });
   } catch (error) {

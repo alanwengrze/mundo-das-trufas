@@ -2,13 +2,13 @@ import  z  from "zod";
 import { categorySchema } from "./category.schema";
 
 export const productSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  price: z.number().min(0, "Price must be a positive number"),
-  description: z.string(),
-  category: categorySchema,
+  name: z.string().min(1, "O nome do produto precisa ser preenchido."),
+  price: z.number().min(0, "O preço do produto precisa ser preenchido."),
+  description: z.string().min(1, "A descrição do produto precisa ser preenchida."),
+  category: categorySchema.optional(),
   imageUrl: z.string().url().default("/placeholder.svg?height=200&width=200"),
-  quantityInStock: z.number().int().min(0),
-  categoryId: z.string(),
+  quantityInStock: z.number().int().min(1, "A quantidade em estoque precisa ser preenchida."),
+  categoryId: z.string().min(1, "A categoria precisa ser preenchida."),
   stripeId: z.string().optional(),
 });
 

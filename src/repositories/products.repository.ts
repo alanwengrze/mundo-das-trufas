@@ -4,6 +4,7 @@ import type { ProductType } from "@/schemas/product.schema";
 export class ProductsRepository {
   async findAll() {
     const products = await prisma.product.findMany({
+      where: { active: true },
       include: {
         category: {
           select: {
@@ -25,6 +26,19 @@ export class ProductsRepository {
           },
         },
       },
+    });
+    return product;
+  }
+
+  async findByStripeId(stripeId: string) {
+    const product = await prisma.product.findFirst({
+      where: { stripeId },
+    });
+    return product;
+  }
+  async findByName(name: string) {
+    const product = await prisma.product.findFirst({
+      where: { name },
     });
     return product;
   }
@@ -51,5 +65,12 @@ export class ProductsRepository {
       data: { quantityInStock: { decrement: quantity } },
     })
     return product
+  }
+  async delete(id: string) {
+    const product = await prisma.product.update({
+      where: { id },
+      data: { active: false },
+    });
+    return product;
   }
 }

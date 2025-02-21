@@ -1,10 +1,8 @@
-"use client";
-
 import { redirect } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { auth } from "@/auth";
 
-export default function App() {
-  const { data: session } = useSession();
+export default async function App() {
+  const session = await auth();
   return (
     <div>
       {session?.user.role !== "ADMIN" ? redirect("/public") : redirect("/admin")}

@@ -23,6 +23,9 @@ import axios from "axios"
 import Image from "next/image"
 import useSWR from "swr"
 import type { FullCategoryType } from "@/schemas/category.schema"
+import { ImageIcon } from "lucide-react"
+import { Icons } from "@/components/icons"
+import { Spinner } from "@/components/spinner"
 
 export function ProductForm() {
 
@@ -40,6 +43,13 @@ export function ProductForm() {
 
   const form = useForm<ProductType>({
     resolver: zodResolver(productSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      price: 0,
+      imageUrl: "",
+      quantityInStock: 0,
+    }
   })
 
   form.watch("categoryId");
@@ -54,7 +64,6 @@ export function ProductForm() {
     formData.append("file", file); // Arquivo a ser enviado
     formData.append("upload_preset", "product_images");
     try {
-
       const response = await axios.post(
         `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`, 
         formData,
@@ -99,8 +108,10 @@ export function ProductForm() {
     }
   }
 
+  const imageUrlValue = form.watch("imageUrl");
+
   return (
-    <div className="max-w-md mx-auto p-6 space-y-8">
+    <div className="max-w-2xl mx-auto p-6 space-y-8">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
@@ -108,9 +119,9 @@ export function ProductForm() {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Product Name</FormLabel>
+                <FormLabel>Nome do produto</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter product name" {...field} />
+                  <Input placeholder="Ex: Trufa de chocolate" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -122,9 +133,9 @@ export function ProductForm() {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>Descrição</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Enter product description" className="resize-none" {...field} />
+                  <Textarea placeholder="Ex: Deliciosa trufa de chocolate" className="resize-none" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -157,40 +168,41 @@ export function ProductForm() {
           />
 
           {/* <Button type="button">Criar uma nova categoria</Button> */}
+          <div className="grid gap-8 md:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Preço</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      step="R$ 0.01"
+                      placeholder="R$ 0.00"
+                      {...field}
+                      onChange={(e) => field.onChange(Number.parseFloat(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="price"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Price</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    step="0.01"
-                    placeholder="0.00"
-                    {...field}
-                    onChange={(e) => field.onChange(Number.parseFloat(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField 
-            control={form.control}
-            name="quantityInStock"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Quantity in Stock</FormLabel>
-                <FormControl>
-                  <Input type="number" placeholder="0" {...field} onChange={(e) => field.onChange(Number.parseInt(e.target.value))} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField 
+              control={form.control}
+              name="quantityInStock"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Quantidade em estoque</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="0" {...field} onChange={(e) => field.onChange(Number.parseInt(e.target.value))} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           <FormField
             control={form.control}
@@ -200,15 +212,12 @@ export function ProductForm() {
                 <FormLabel>Selecione uma imagem</FormLabel>
                 <FormControl>
                   <Input 
-                    // placeholder="https://example.com/image.jpg"
-                    // {...field} 
-                    // value={field.value || ""}
                     type="file"
                     accept="image/*"
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (file) {
-                        handleUploadImage(file, field.onChange); // Faz o upload e atualiza o valor do campo
+                        handleUploadImage(file, field.onChange);
                       }
                     }}
                   />
@@ -218,20 +227,35 @@ export function ProductForm() {
             )}
           />
 
-          {preview && (
-            <div className="mt-4">
-              <Image 
-                src={preview}
-                alt="Preview"
-                width={100}
-                height={100}
-                className="w-full mx-auto object-cover"
-              />
-            </div>
-          )}
-
-          <Button type="submit" className="w-full">
-            Create Product
+          {preview ? (
+              <div className="relative aspect-square w-80 overflow-hidden rounded-lg border">
+                <Image src={preview} alt="Pré-visualização da imagem" fill className="object-cover" />
+              </div>
+            ) : (
+              <div className="flex aspect-square w-80 items-center justify-center rounded-lg border bg-muted">
+                <ImageIcon className="h-10 w-10 text-muted-foreground" />
+              </div>
+            )}
+          <Button 
+            type="submit" 
+            className="flex items-center gap-2"
+            disabled={form.formState.isSubmitting}
+          >
+            {form.formState.isSubmitting ? (
+              <> 
+                <Spinner/>
+                <span>Criando produto...</span>
+              </>
+              
+            ):
+              (
+                <> 
+                  <Icons.plus/>
+                  <span>Criar produto</span>
+                </>
+              )
+            }
+            
           </Button>
         </form>
       </Form>

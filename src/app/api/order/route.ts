@@ -1,12 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
+import { stripe } from "@/lib/stripe";
 import { ProductsService } from "@/services/products.service";
 import { handleError } from "@/middlewares/error-handler";
 import { AppError } from "@/errors/app-error";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(request: Request) {
   
@@ -52,12 +50,12 @@ export async function POST(request: Request) {
     const amountPrice = cart.itemsCart.reduce((total, item) => total + item.quantity * item.product.price, 0);
 
     const customerAddress = sessionStripe.metadata?.addressId;
-
+    if(!customerAddress) throw new AppError("Endereço de entrega não encontrado.");
     // Cria a ordem com os dados do carrinho
     const order = await prisma.order.create({
       data: {
         userId: session.user.id,
-        addressId: customerAddress!,
+        addressId: customerAddress,
         status: paymentStatus === "paid" ? "COMPLETED" : "PENDING",
         amount: amountPrice,
         itemsOrder: {
@@ -86,7 +84,7 @@ export async function POST(request: Request) {
       data: { itemsCart: { deleteMany: {} } },
     });
 
-    return NextResponse.json({ message: "Pedido criado com sucesso!", order }, { status: 201 });
+    return NextResponse.json(order, { status: 201 });
   } catch (error) {
     return handleError(error);
   }
@@ -99,11 +97,26 @@ export async function GET() {
   if (!session?.user?.id) {
     throw new AppError("Usuário nao autenticado.");
   }
-  console.log("/Orders Usuario autenticado", session.user.id)
 
   try {
+
+    if(session.user.role === "ADMIN"){
+      const orders = await prisma.order.findMany({
+        include: {
+          itemsOrder: {
+            include: {
+              product: {include: {category: true}}
+            }
+          }
+        }
+      });
+      return NextResponse.json(orders, { status: 200 });
+    }
+
     const orders = await prisma.order.findMany({
-      where: { userId: session.user.id },
+      where: { 
+        userId: session.user.id,
+      },
       include: {
         itemsOrder: {
           include: {

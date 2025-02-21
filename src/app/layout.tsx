@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { Header } from "@/components/header";
 import { Toaster } from "@/components/ui/sonner";
 import { SessionProvider } from "next-auth/react";
 import { CartProvider } from "@/contexts/cart-context";
 import { auth } from "@/auth";
 import { ProductProvider } from "@/contexts/product-context";
+import { AppSidebar } from "@/components/app-sidebar";
+import { cookies } from "next/headers";
+import { Separator } from "@/components/ui/separator";
 
 export const metadata: Metadata = {
   title: "Mundo das trufas",
@@ -19,25 +23,39 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
+  const cookieStore = await cookies()
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true"
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <body>
         <SessionProvider session={session}>
-        <ProductProvider>
-          <CartProvider>
-            <ThemeProvider
-              attribute="class"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <Header />
-              <div className="max-w-7xl min-h-screen mx-auto mt-8 p-4 border rounded-md">{children}</div>
-              <Toaster 
-                richColors
-              />
-            </ThemeProvider>
-          </CartProvider>
-        </ProductProvider>
+        <SidebarProvider defaultOpen={defaultOpen}>
+          <ProductProvider>
+            <CartProvider>
+              <ThemeProvider
+                attribute="class"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <AppSidebar/>
+                <main className="w-full flex flex-col">
+                  <Header />
+                  <Separator />
+                  <section className="px-4 flex-1">
+                    {children}
+                  </section>
+                  <Separator />
+                  <footer className="w-full text-center text-muted-foreground text-sm py-3">
+                    Mundo das trufas
+                  </footer>
+                </main>
+                <Toaster 
+                  richColors
+                />
+              </ThemeProvider>
+            </CartProvider>
+          </ProductProvider>
+        </SidebarProvider>
         </SessionProvider>
       </body>
     </html>

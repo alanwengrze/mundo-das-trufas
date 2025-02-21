@@ -5,6 +5,11 @@ import { OrderType } from "@/schemas/order.schema"
 import { priceFormatter, dateFormatter } from "@/utils/dateFormatter"
 import clsx from "clsx"
 
+import { useRouter } from "next/navigation"
+import { api } from "@/lib/axios"
+import { MoreAction } from "@/components/more-action"
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
 export const columns: ColumnDef<OrderType>[] = [
   {
     accessorKey: "status",
@@ -17,9 +22,9 @@ export const columns: ColumnDef<OrderType>[] = [
           className={clsx(
             `font-bold rounded-md border px-1 w-fit`,
             {
-              'text-green-500 bg-green-200 border-green-500': status === 'COMPLETED',
-              'text-red-300 bg-red-200 border-red-500': status === 'CANCELED',
-              'text-orange-300 bg-orange-200 border-orange-500': status === 'PENDING'   
+              'text-green-600 bg-green-200 border-green-600': status === 'COMPLETED',
+              'text-red-600 bg-red-200 border-red-600': status === 'CANCELED',
+              'text-orange-600 bg-orange-200 border-orange-600': status === 'PENDING'   
             }
           )}>
           {status}
@@ -44,5 +49,40 @@ export const columns: ColumnDef<OrderType>[] = [
       const amount = value as number
       return priceFormatter.format(amount)
     } 
+  },
+  {
+    accessorKey: "id",
+    header: () => <div >Ações</div>,
+    cell: ({getValue})=> {
+      const value = getValue()
+      const id = value as string
+
+      const {push} = useRouter()
+
+      const handleView = () => push(`/public/orders/${id}`)
+     const handleDelete = async () => {
+       try {
+         await api.delete(`/order/${id}`);
+         
+       } catch (error) {
+         console.error(error);
+       }
+     }
+
+      return (
+        <MoreAction>
+           <DropdownMenuItem
+            onClick={handleView}
+          >
+            Visualizar
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            asChild
+          >
+           <Button variant="destructive" onClick={handleDelete}>Excluir</Button>
+          </DropdownMenuItem>
+        </MoreAction>
+      )
+    }
   },
 ]

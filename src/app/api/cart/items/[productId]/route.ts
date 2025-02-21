@@ -3,11 +3,12 @@ import { ItemsCartService } from "@/services/itemsCart.service";
 import { handleError } from "@/middlewares/error-handler";
 import { AppError } from "@/errors/app-error";
 // Remover item do carrinho
-export async function DELETE(request: Request ) {
+export async function DELETE( { params }: { params: { productId: string } }) {
+
+  const { productId } = await params;
+  const itemsCartService = new ItemsCartService();
+
   try {
-    const url = new URL(request.url);
-    const productId = url.pathname.split("/").pop();
-    const itemsCartService = new ItemsCartService();
 
     if(!productId) throw new AppError("Produto não encontrado.");
 
@@ -18,13 +19,12 @@ export async function DELETE(request: Request ) {
     return handleError(error);
   }
 }
-export async function PATCH(request: Request) {
-  try {
-    const url = new URL(request.url);
-    const productId = url.pathname.split("/").pop();
-    const { quantity } = await request.json();
+export async function PATCH(request: Request, { params }: { params: { productId: string } }) {
+  const { productId } = await params;
+  const { quantity } = await request.json();
+  const itemsCartService = new ItemsCartService();
 
-    const itemsCartService = new ItemsCartService();
+  try {
 
     if(!productId) throw new AppError("productId ausente");
 

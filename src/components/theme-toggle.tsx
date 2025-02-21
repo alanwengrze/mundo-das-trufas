@@ -8,11 +8,14 @@ import { Button } from "@/components/ui/button"
 
 export function ThemeToggle() {
   const { setTheme, theme } = useTheme()
-
+  function handleThemeChange() {
+    setTheme(theme === "dark" ? "light" : "dark")
+  }
   return (
     <Button
-      size="sm"
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      className="h-7 w-7"
+      variant="outline"
+      onClick={handleThemeChange}
     >
       {theme === "dark" ? <Sun /> : <Moon />}
       <span className="sr-only">Toggle theme</span>

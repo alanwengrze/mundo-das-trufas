@@ -22,7 +22,7 @@ export default function Orders() {
       <h2 className="text-2xl font-bold mb-8">Meus pedidos</h2>
       <DataTable 
         columns={columns} 
-        data={orders || []} 
+        data={orders || []}
       />
     </div>
   );

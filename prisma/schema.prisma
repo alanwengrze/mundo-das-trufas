@@ -33,15 +33,16 @@ enum Role {
 }
 
 model Address {
-  id      String  @id @default(uuid())
-  street  String
-  number  String
-  city    String
-  state   String
-  zipCode String
-  userId  String
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  order   Order[]
+  id           String  @id @default(uuid())
+  userId       String  @unique
+  street       String
+  number       String
+  neighborhood String
+  city         String
+  state        String
+  zipCode      String
+  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  order        Order[]
 
   @@map("address")
 }
@@ -97,6 +98,7 @@ model Product {
   discountPrice   Float?
   imageUrl        String?
   quantityInStock Int
+  active          Boolean     @default(true)
   currency        String      @default("brl")
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
@@ -110,7 +112,7 @@ model Product {
 
 model Category {
   id        String   @id @default(uuid())
-  name      String
+  name      String   @unique
   createdAt DateTime @default(now())
 
   product Product[]
@@ -127,7 +129,7 @@ model Cart {
   amount    Float
   itemsCart ItemCart[] //um array de produtos (cada item do carrinho)
   order     Order? //conecta o carrinho com o Pedido
-  user      User?      @relation(fields: [userId], references: [id])
+  user      User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("carts")
 }
@@ -176,7 +178,7 @@ model ItemOrder {
   productId String
   orderId   String
   product   Product @relation(fields: [productId], references: [id])
-  order     Order   @relation(fields: [orderId], references: [id])
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   @@map("items_order")
 }
@@ -184,11 +186,11 @@ model ItemOrder {
 model Payment {
   id          String   @id @default(uuid())
   orderId     String   @unique
+  stripeId    String
   status      String
   paymentDate DateTime @default(now())
   type        String
   amount      Float
-  stripeId    String
   metadata    Json?
   order       Order    @relation(fields: [orderId], references: [id])
 

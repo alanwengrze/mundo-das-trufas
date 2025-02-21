@@ -3,12 +3,13 @@ import { handleError } from "@/middlewares/error-handler";
 import { AppError } from "@/errors/app-error";
 import { NextResponse } from "next/server";
 
-export async function DELETE(request: Request) {
-  try {
-    const url = new URL(request.url);
-    const id = url.pathname.split("/").pop();
-    const categoriesService = new CategoriesService();
+export async function DELETE( { params }: { params: { id: string } }) {
 
+  const { id } = await params;
+  const categoriesService = new CategoriesService();
+  
+  try {
+  
     if (!id) {
       throw new AppError("id ausente");
     }
@@ -21,13 +22,14 @@ export async function DELETE(request: Request) {
   }
 }
 
-export async function PATCH(request: Request) {
-  try {
-    const url = new URL(request.url);
-    const id = url.pathname.split("/").pop();
-    const { name } = await request.json();
-    const categoriesService = new CategoriesService();
+export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+  
+  const { id } = await params;
+  const { name } = await request.json();
+  const categoriesService = new CategoriesService();
 
+  try {
+    
     if (!id) {
       throw new AppError("id ausente");
     }
