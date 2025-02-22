@@ -27,7 +27,6 @@ export const CartSummary = () => {
   }
 
   async function handleCheckout() {
-    loading
     reward();
     redirect("/public/checkout");
   }
