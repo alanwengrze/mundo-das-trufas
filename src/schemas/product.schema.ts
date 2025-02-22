@@ -13,6 +13,7 @@ export const productSchema = z.object({
   stripeId: z.string().optional(),
 });
 
+
 export const fullProductSchema = productSchema.extend({
   id: z.string(),
   createdAt: z.date(),

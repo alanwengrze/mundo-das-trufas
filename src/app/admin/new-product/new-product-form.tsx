@@ -22,11 +22,12 @@ import { useState } from "react"
 import axios from "axios"
 import Image from "next/image"
 import useSWR from "swr"
-import type { FullCategoryType } from "@/schemas/category.schema"
+import type { FullCategoryType, fullCategorySchema } from "@/schemas/category.schema"
 import { ImageIcon } from "lucide-react"
 import { Icons } from "@/components/icons"
 import { Spinner } from "@/components/spinner"
 
+type FormValues = Omit<ProductType, "category">
 export function ProductForm() {
 
   //buscar as categorias
@@ -41,8 +42,8 @@ export function ProductForm() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
-  const form = useForm<ProductType>({
-    resolver: zodResolver(productSchema),
+  const form = useForm<FormValues>({
+    resolver: zodResolver(productSchema.omit({ category: true })),
     defaultValues: {
       name: "",
       description: "",
@@ -90,7 +91,7 @@ export function ProductForm() {
    
   }
 
-  async function onSubmit(data: ProductType) {
+  async function onSubmit(data: FormValues) {
     console.log("Data:", data);
     try {
       await api.post("/products", {
