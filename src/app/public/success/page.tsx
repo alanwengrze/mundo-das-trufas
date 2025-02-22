@@ -24,14 +24,7 @@ export default function CheckoutSuccessPage() {
         sessionId,
       });
 
-      console.log("Esses são os dados da ordem criada: ", response.data);
-
       if (response.status !== 201) throw new Error("Erro ao finalizar pedido");
-
-      // const { data: order } = useSWR<OrderType>("/order", async (url: string) => {
-      //   const response = await api.get(url);
-      //   return response.data;
-      // });
 
       console.log("Pedido criado com sucesso!");
     } catch (error) {

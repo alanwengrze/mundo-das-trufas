@@ -107,7 +107,7 @@ export const columns: ColumnDef<ProductType>[] = [
       return (
         <MoreAction> 
           <DropdownMenuItem asChild>
-            <Link href={`/admin/products/${id}`}>
+            <Link href={`/public/products/${id}`}>
               <Button variant="ghost" size="sm">
                 Visualizar
               </Button>

@@ -73,7 +73,7 @@ export async function POST(request: Request) {
     if(order.status === "COMPLETED"){
       order.itemsOrder.map(async (item) => {
         await productsService.decrementStock(item.productId, item.quantity);
-      })
+      });
       console.log("Produtos atualizados:", order.itemsOrder);
     }
 

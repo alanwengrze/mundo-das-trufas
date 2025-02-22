@@ -28,7 +28,7 @@ export function ProductList({products}:{products: FullProductType[]}) {
                 productsByCategory[category].map((product) => (
                   <CarouselItem 
                     key={product.id}
-                    className="pl-4 lg:basis-1/2 xl:basis-1/3"
+                    className="pl-4 sm:basis-1/2 lg:basis-1/3"
                   >
                     <ProductCard
                       product={product}

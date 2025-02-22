@@ -14,16 +14,27 @@ export class CartRepository {
 
   async getCart(userId: string) {
     const cart = await prisma.cart.findUnique({ 
-      where: { userId },
+      where: { userId},
       include: {
         itemsCart: {
           include: {
-            product: { include: { category: true }}, // Inclui os detalhes do produto associado a cada item do carrinho
+            product: {include: { category: true }},    
           },
         },
       },
 
     }); 
+    return cart;
+  }
+
+  async updateCart() {
+    const cart = await prisma.itemCart.deleteMany({
+      where: {
+        product: {
+          active: false
+        }
+      }
+    });
     return cart;
   }
 

@@ -35,6 +35,7 @@ export async function POST() {
         product_data: {
           name: item.product.name,
           images: item.product.imageUrl ? [item.product.imageUrl] : [],
+          
         },
         unit_amount: Math.round(item.product.price * 100), // Stripe aceita centavos
       },

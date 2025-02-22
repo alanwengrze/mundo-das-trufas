@@ -3,10 +3,10 @@ import { prisma } from "@/lib/prisma";
 import { handleError } from "@/middlewares/error-handler";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   console.log(req);
   try {
-    const { id } = await params;
+    const id = (await params).id;
     if(!id) throw new AppError("O pedido não foi encontrado.");
   
     const order = await prisma.order.findUnique({ 
@@ -33,10 +33,10 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   console.log(req);
   try {
-    const {id} = await params;
+    const id = (await params).id;
 
     if (!id) {
       return NextResponse.json({ error: "O ID do pedido não foi fornecido." }, { status: 400 });

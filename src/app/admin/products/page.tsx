@@ -12,7 +12,7 @@ export default function ProductsPage() {
      <div className="container mx-auto py-10">
       <section className="flex items-center justify-between">
       <h2 className="text-2xl font-bold mb-8">Produtos</h2>
-      <Link href="/admin/new-product"> <Button variant="outline"> <Icons.plus /> Novo produto</Button></Link>
+      <Link href="/admin/new-product"> <Button variant="default"> <Icons.plus /> Novo produto</Button></Link>
       </section>
       <DataTable 
         columns={columns} 

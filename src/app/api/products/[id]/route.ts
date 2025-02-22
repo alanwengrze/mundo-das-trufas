@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { ProductsService } from "@/services/products.service";
 import { handleError } from "@/middlewares/error-handler";
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   console.log(req);
-  const {id} = await params;
+  const id = (await params).id;
 
   const productService = new ProductsService();
   try {
@@ -34,7 +34,7 @@ export async function PUT(req: NextRequest){
   return NextResponse.json(product, {status: 200});
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   console.log(req);
   const {id} = await params;
 

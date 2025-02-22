@@ -18,11 +18,11 @@ export class ProductsRepository {
 
   async findById(id: string) {
     const product = await prisma.product.findUnique({
-      where: { id },
+      where: { id, active: true },
       include: {
         category: {
           select: {
-            name: true,
+            name: true
           },
         },
       },
@@ -32,7 +32,7 @@ export class ProductsRepository {
 
   async findByStripeId(stripeId: string) {
     const product = await prisma.product.findFirst({
-      where: { stripeId },
+      where: { stripeId, active: true },
     });
     return product;
   }

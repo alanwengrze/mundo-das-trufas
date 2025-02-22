@@ -27,8 +27,8 @@ export function CartProvider({ children }: CartProviderProps) {
   const { data: itemsCart, error, mutate } = useSWR<ItemCartType[]>(
     status === "authenticated" ? "/cart" : null,
     async (url: string) => {
-      setLoading(false);
       const response = await api.get(url);
+      setLoading(false);
       return response.data;
     }
   );
@@ -43,8 +43,8 @@ export function CartProvider({ children }: CartProviderProps) {
     });
     mutate();
    } catch (error) {
-    setLoading(false);
      console.error(error);
+     setLoading(false);
    }
   }
 
@@ -68,6 +68,7 @@ export function CartProvider({ children }: CartProviderProps) {
       mutate();
     }catch (error) {
       console.error(error);
+      setLoading(false);
     }
   }
 

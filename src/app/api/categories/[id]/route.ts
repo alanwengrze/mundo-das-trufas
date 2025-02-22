@@ -3,9 +3,9 @@ import { handleError } from "@/middlewares/error-handler";
 import { AppError } from "@/errors/app-error";
 import { NextResponse } from "next/server";
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   console.log(req);
-  const { id } = await params;
+  const id = (await params).id;
   const categoriesService = new CategoriesService();
   
   try {
@@ -22,9 +22,9 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
   }
 }
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   
-  const { id } = await params;
+  const id = (await params).id;
   const { name } = await request.json();
   const categoriesService = new CategoriesService();
 

@@ -4,16 +4,20 @@ import { ItemCart } from "./item-cart";
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 
-import { useSession } from "next-auth/react";
 import { useCart } from "@/contexts/cart-context";
-import { ButtonCheckout } from "./button-checkout";
+
 // import {Spinner} from "@/components/spinner";
 import { Separator } from "@radix-ui/react-separator";
 import { priceFormatter } from "@/utils/dateFormatter";
 import { VoidCart } from "./void-cart";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/spinner";
+import { useReward } from 'react-rewards';
+import { redirect } from "next/navigation";
+
 export const CartSummary = () => {
-  const { itemsCart, error, removeFromCart, changeQuantity} = useCart();
-  const { status } = useSession();
+  const { itemsCart, error, removeFromCart, changeQuantity, loading} = useCart();
+  const { reward, isAnimating } = useReward('rewardId', 'confetti');
   function handleRemoveItem(productId: string) {
     removeFromCart(productId);
   }
@@ -22,31 +26,34 @@ export const CartSummary = () => {
     changeQuantity(productId, quantity);
   }
 
-  if (status === "loading") return <p>Carregando...</p>;
-  if (status === "unauthenticated") return <p>Por favor, faça login para ver seu carrinho.</p>;
+  async function handleCheckout() {
+    loading
+    reward();
+    redirect("/public/checkout");
+  }
+
   if (error) return <p>Erro: {error}</p>;
-  if (itemsCart.length === 0) return <VoidCart />;
+  if ( itemsCart.length === 0) return <VoidCart />;
   const totalItemsPrice = itemsCart.reduce((total, item) => total + item.product.price * item.quantity, 0);
 
   const priceWithDelivery = totalItemsPrice + 7.5;
 
   return (
-  <div className="lg:col-span-2 space-y-4">
+  <div className="space-y-4">
     <h1 className="text-3xl font-bold mb-8">Meu carrinho</h1>
+    <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 ">
     {
       itemsCart.map((item) => (
-      <div key={item.product.id} className="w-fit grid gap-8 lg:grid-cols-2">
-        <div className="lg:col-span-2 space-y-4">
         <ItemCart 
+          key={item.product.id}
           itemCart={item}
           onRemoveItem={() => handleRemoveItem(item.productId)}
           onIncrementQuantity={() => handleChangeQuantity(item.productId, item.quantity + 1)}
           onDecrementQuantity={() => handleChangeQuantity(item.productId, item.quantity - 1)}
         />
-        </div> 
-      </div>
       ))
     }
+    </div>
      <div className="lg:col-span-2">
         <Card>
           <CardHeader>
@@ -68,7 +75,21 @@ export const CartSummary = () => {
             </div>
           </CardContent>
           <CardFooter>
-            <ButtonCheckout />
+            <Button
+              disabled={ loading || isAnimating}
+              onClick={handleCheckout}
+            >
+              {
+                loading ? (
+                  <div id="rewardId" className="flex items-center gap-2">
+                    <span>Processando...</span>
+                    <Spinner />
+                  </div>
+                ) : (
+                  <span id="rewardId">Finalizar pedido</span>
+                )
+              }
+            </Button>
           </CardFooter>
         </Card>
       </div>
