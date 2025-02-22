@@ -36,6 +36,7 @@ export const ProductCard = ({product}: ProductCardProps) => {
       setQuantity((prevQuantity) => prevQuantity - 1);
     }
   }
+
   return (
     <Card className="min-h-[250px] max-w-72 px-4 card-border flex flex-col items-center mt-20">
       <Image
@@ -50,7 +51,7 @@ export const ProductCard = ({product}: ProductCardProps) => {
       <CardContent className="flex flex-col items-center gap-4">
       <CardHeader>
         <CardTitle className="m-auto px-4 text-lg uppercase text-rose-400 bg-rose-200 border border-rose-400 font-semibold text-center rounded-md">
-          {product.category?.name}
+          {product.category.name}
         </CardTitle>
       </CardHeader>
         <h1 className="text-xl capitalize text-center">{product.name}</h1>

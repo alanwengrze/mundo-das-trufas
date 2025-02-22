@@ -1,15 +1,16 @@
 import type { FullProductType } from "@/schemas/product.schema";
 
-export const getProductsByCategory = (products: FullProductType[]) => {
-    return products
-      .map((product) => ({ category: product.category.name, product }))
-      .reduce((acc, { category, product }) => {
-        if (!acc[category]) {
-          acc[category] = [];
-        }
-        return {
-          ...acc,
-          [category]: [...acc[category], product],
-        };
-      }, {} as { [key: string]: FullProductType[] });
-  };
+export const getProductsByCategory = (
+  products: FullProductType[]
+): { [key: string]: FullProductType[] } => {
+  return products.reduce((acc, product) => {
+    const categoryName = product.category?.name || "Sem categoria";
+
+    if (!acc[categoryName]) {
+      acc[categoryName] = [];
+    }
+    acc[categoryName].push(product);
+
+    return acc;
+  }, {} as { [key: string]: FullProductType[] });
+};
