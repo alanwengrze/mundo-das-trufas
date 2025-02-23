@@ -6,8 +6,7 @@ import { useProduct } from "@/contexts/product-context"
 export default function Home() {
   const {products } = useProduct()
   return (
-    <div className="flex flex-col gap-4">
-     <h1 className="text-2xl font-bold">Produtos</h1>
+    <div className="container mt-20 mx-auto overflow-x-hidden ">
      <ProductList products={products}/>
     </div>
   )

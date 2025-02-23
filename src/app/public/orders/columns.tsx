@@ -8,33 +8,45 @@ import clsx from "clsx"
 import { api } from "@/lib/axios"
 import { MoreAction } from "@/components/more-action"
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
+import { DataTableColumnHeader } from "@/components/data-table-column-header"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { mutate } from "swr"
+import { ButtonDestructive } from "@/components/button-destructive"
+
 export const columns: ColumnDef<OrderType>[] = [
   {
     accessorKey: "status",
-    header: () => <div className="text-left">Status</div>,
+    header: () => {
+      return (
+        <div>Status</div>
+      )
+    },
     cell: ({getValue}) => {
       const value = getValue()
       const status = value as string
       return (
         <div 
           className={clsx(
-            `font-bold rounded-md border px-1 w-fit`,
+            `font-bold rounded-md border px-1 w-fit capitalize`,
             {
               'text-green-600 bg-green-200 border-green-600': status === 'COMPLETED',
               'text-red-600 bg-red-200 border-red-600': status === 'CANCELED',
-              'text-orange-600 bg-orange-200 border-orange-600': status === 'PENDING'   
+              'text-orange-600 bg-orange-200 border-orange-600': status === 'PENDING'
             }
           )}>
-          {status}
+          {status === 'COMPLETED' ? 'Finalizado' : status === 'CANCELED' ? 'Cancelado' : 'Pendente'}
         </div>
       )
     }
   },
   {
     accessorKey: "orderDate",
-    header: () => <div className="text-left">Data da compra</div>,
+    header: ({column}) => {
+      return (
+        <DataTableColumnHeader column={column} title="Data da compra"/>
+      )
+    },
     cell: ({getValue}) => {
       const value = getValue();
       const date = new Date(value as string);
@@ -43,7 +55,11 @@ export const columns: ColumnDef<OrderType>[] = [
   },
   {
     accessorKey: "amount",
-    header: "Total",
+    header: ({column}) => {
+      return (
+        <DataTableColumnHeader column={column} title="Total"/>
+      )
+    },
     cell: ({getValue})=> {
       const value = getValue()
       const amount = value as number
@@ -60,6 +76,7 @@ export const columns: ColumnDef<OrderType>[] = [
      const handleDelete = async () => {
        try {
          await api.delete(`/order/${id}`);
+         mutate(`/order`);
          
        } catch (error) {
          console.error(error);
@@ -73,10 +90,15 @@ export const columns: ColumnDef<OrderType>[] = [
           >
             <Link href={`/public/orders/${id}`}>Visualizar</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem
-            asChild
-          >
-           <Button variant="destructive" onClick={handleDelete}>Excluir</Button>
+          <DropdownMenuItem asChild>
+            <ButtonDestructive
+              textTrigger="Excluir"
+              title="Tem certeza que deseja excluir?"
+              description="Ao excluir, você perderá todos os dados relacionados a essa compra."
+              textAction="Excluir"
+              textCancel="Cancelar"
+              onAction={handleDelete}
+            />
           </DropdownMenuItem>
         </MoreAction>
       )

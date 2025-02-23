@@ -9,68 +9,86 @@ import {
 } from "@/components/ui/menubar";
 
 import { ThemeToggle } from "./theme-toggle";
-import { signOut, useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import { ButtonNavigation } from "./button-navigation";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { Icons } from "./icons";
 import { SidebarTrigger } from "./ui/sidebar";
+import { useCart } from "@/contexts/cart-context";
+import { AuthButton } from "./auth-button";
+import { Button } from "./ui/button";
 
-
-const NavigationButtons = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
-  return (
-    <>
-      <ButtonNavigation onNavigation={() => redirect("/")} text="Home" icon={<Icons.home />} />
-      {isAuthenticated && (
-        <>
-          <ButtonNavigation onNavigation={() => redirect("/public/orders")} text="Pedidos" icon={<Icons.history />} />
-        </>
-      )}
-      
-      {isAuthenticated ? (
-        <ButtonNavigation onNavigation={() => signOut({ redirectTo: "/public/auth" })} text="Sair" icon={<Icons.logout />} variant="destructive"/>
-      ) : (
-        <ButtonNavigation onNavigation={() => redirect("/public/auth")} text="Entrar" icon={<Icons.login />} />
-      )}
-    </>
-  );
-};
 
 export const Header = () => {
-  const { status } = useSession()
+  const { data: session, status } = useSession()
   const isAuthenticated = status === "authenticated";
+  const isAdmin = session?.user?.role === "ADMIN";
+  const { itemsCart } = useCart();
+  const { push } = useRouter();
+   const items = [
+  {
+    title: "Catálogo",
+    url: "/public",
+    icon: Icons.home,
+    visible: isAuthenticated ? true : false
+  },
+  {
+    title: "Pedidos",
+    url: "/public/orders",
+    icon: Icons.history,
+    visible: isAuthenticated ? true : false
+  },
+  {
+    title: "Carrinho",
+    url: "/public/cart",
+    icon: Icons.cart,
+    visible: isAuthenticated && !isAdmin ? true : false
+  },
+  {
+    title: "Gerenciar produtos",
+    url: "/admin/products",
+    icon: Icons.product,
+    visible: isAuthenticated && isAdmin ? true : false
+  }
+  ]
 
   return (
     <>
-      <div className="hidden md:block">
+      <div className="hidden md:sticky md:top-0 z-10 md:block w-full">
         <div className="glass flex items-center p-4 gap-4">
-        <SidebarTrigger variant="outline"/>
+        {isAuthenticated && (
+          <SidebarTrigger variant="outline" className="md:sticky"/>
+        )}
+        {!isAuthenticated &&(
+          <Button variant="default" onClick={() => push("/public")}><Icons.home/></Button>
+        )}
+        <AuthButton />
         <ThemeToggle />
-        {isAuthenticated ? (
-        <ButtonNavigation onNavigation={() => signOut({ redirectTo: "/public/auth" })} text="Sair" variant="destructive" icon={<Icons.logout />} />
-      ) : (
-        <ButtonNavigation onNavigation={() => redirect("/public/auth")} text="Entrar" icon={<Icons.login />} />
-      )}
         </div>
       </div>
      
-      {!isAuthenticated ? null : (
-        <Menubar className="py-10 px-2 z-10 md:hidden">
-          <MenubarMenu>
-            <MenubarTrigger>{<Icons.menu />}</MenubarTrigger>
-            <MenubarContent className="glass flex flex-col items-baseline gap-3">
-              <MenubarItem asChild>
-                <ThemeToggle />
+      <Menubar className="py-4 px-2 z-10 md:hidden">
+        <MenubarMenu>
+          <MenubarTrigger>{<Icons.menu />}</MenubarTrigger>
+          <MenubarContent className="glass flex flex-col items-baseline gap-3">
+            {items.map((item) => (
+              <MenubarItem className="flex gap-2" key={item.title} onClick={() => push(item.url)}>
+                  {item.title === "Carrinho" && itemsCart.length > 0 && (
+                    <div className="relative -ml-2">
+                      <span className="absolute -top-4
+                      -right-9 h-4 w-4 rounded-full bg-primary/50 text-xs text-center text-slate-50">{itemsCart.length}</span>
+                    </div>
+                  )}
+                {<item.icon className="h-4 w-4"/>}
+                {item.title}
               </MenubarItem>
-              <MenubarItem asChild>
-                <NavigationButtons isAuthenticated={isAuthenticated} />
-              </MenubarItem>
-              <MenubarItem onClick={() => redirect("/public/cart")}>
-                Carrinho
-              </MenubarItem>
-            </MenubarContent>
-          </MenubarMenu>
-        </Menubar>
-      )}
+            ))}
+            <MenubarItem>
+              <AuthButton />
+            </MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+      </Menubar>
+
     </>
   );
 };

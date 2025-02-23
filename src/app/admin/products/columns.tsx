@@ -3,16 +3,19 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { priceFormatter } from "@/utils/dateFormatter"
 import clsx from "clsx"
-import { api } from "@/lib/axios"
 import { Button } from "@/components/ui/button"
+import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogAction, AlertDialogCancel, AlertDialogTitle, AlertDialogHeader, AlertDialogFooter } from "@/components/ui/alert-dialog"
+import { DataTableColumnHeader } from "@/components/data-table-column-header"
 import Image from "next/image"
 import type { ProductType } from "@/schemas/product.schema"
 import Link from "next/link"
-
+import { useProduct } from "@/contexts/product-context"
 import { 
   DropdownMenuItem,
  } from "@/components/ui/dropdown-menu"
  import { MoreAction } from "@/components/more-action"
+import { AlertDialogDescription } from "@radix-ui/react-alert-dialog"
+import { ButtonDestructive } from "@/components/button-destructive"
 export const columns: ColumnDef<ProductType>[] = [
   {
     accessorKey: "imageUrl",
@@ -69,7 +72,11 @@ export const columns: ColumnDef<ProductType>[] = [
   },
   {
     accessorKey: "price",
-    header: () => <div className="text-left">Preço</div>,
+    header:({column}) => {
+      return (
+        <DataTableColumnHeader  column={column} title="Preço"/>
+      )
+    },
     cell: ({getValue}) => {
       const value = getValue();
       const price = value as number;
@@ -78,7 +85,11 @@ export const columns: ColumnDef<ProductType>[] = [
   },
   {
     accessorKey: "category.name",
-    header: "Categoria",
+    header:({column}) => {
+      return (
+        <DataTableColumnHeader  column={column} title="Categoria"/>
+      )
+    },
     cell: ({getValue})=> {
       const value = getValue()
       const category = value as string
@@ -91,13 +102,14 @@ export const columns: ColumnDef<ProductType>[] = [
     accessorKey: "id",
     header: () => <div>Ações</div>,
     cell: ({getValue})=> {
+      const {deleteProduct} = useProduct()
       const value = getValue()
       const id = value as string
 
    
      const handleDelete = async () => {
        try {
-         await api.delete(`/products/${id}`);
+         await deleteProduct(id);
          
        } catch (error) {
          console.error(error);
@@ -113,10 +125,15 @@ export const columns: ColumnDef<ProductType>[] = [
               </Button>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleDelete}>
-            <Button variant="destructive" size="sm">
-              Excluir
-            </Button>
+          <DropdownMenuItem asChild>
+           <ButtonDestructive
+              textTrigger="Excluir"
+              title="Tem certeza que deseja excluir?"
+              description="Ao excluir o produto, ele sera removido do seu catálogo e apenas poderá ser recuperado por meio do banco de dados."
+              textAction="Excluir"
+              textCancel="Cancelar"
+              onAction={handleDelete}
+            />
           </DropdownMenuItem>
         </MoreAction>
       )

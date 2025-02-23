@@ -9,6 +9,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+import { Title } from "./title"
+import { Separator } from "./ui/separator"
 
 export function ProductList({products}:{products: FullProductType[]}) {
   const productsByCategory = getProductsByCategory(products);
@@ -18,22 +20,25 @@ export function ProductList({products}:{products: FullProductType[]}) {
         Object.keys(productsByCategory).map((category) => (
           <Carousel
             key={category}
-            className=""
+            className="mb-8"
           >
-            <h2 className="text-2xl capitalize font-bold">{category}</h2>
+            <div>
+              <Separator className="my-4"/>
+              <Title title={category} />
+            </div>
             <CarouselContent
               className="my-4"
             >
               {
                 productsByCategory[category].map((product) => (
-                  <CarouselItem 
-                    key={product.id}
-                    className="pl-4 sm:basis-1/2 lg:basis-1/3"
-                  >
-                    <ProductCard
-                      product={product}
-                    />
-                  </CarouselItem>
+                <CarouselItem 
+                  key={product.id}
+                  className="pl-4 md:basis-1/3"
+                >
+                  <ProductCard
+                    product={product}
+                  />
+                </CarouselItem>
                 ))
               }
             </CarouselContent>

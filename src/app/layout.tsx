@@ -41,7 +41,7 @@ export default async function RootLayout({
                 <main className="w-full flex flex-col">
                   <Header />
                   <Separator />
-                  <section className="px-4 flex-1">
+                  <section className="px-4 h-full">
                     {children}
                   </section>
                   <Separator />

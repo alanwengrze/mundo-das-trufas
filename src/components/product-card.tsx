@@ -38,7 +38,7 @@ export const ProductCard = ({product}: ProductCardProps) => {
   }
 
   return (
-    <Card className="min-h-[250px] max-w-72 px-4 card-border flex flex-col items-center mt-20">
+    <Card className="min-h-[250px] max-w-72 px-2 rounded-sm flex flex-col items-center mt-20">
       <Image
         src={product.imageUrl || "/placeholder.svg?height=200&width=200"}
         alt={product.name}

@@ -47,7 +47,7 @@ export function ProductDetails() {
               </div>
               <Separator />
               <Button size="lg" className="w-full md:w-auto">
-                Add to Cart
+                Comprar
               </Button>
             </div>
           </div>

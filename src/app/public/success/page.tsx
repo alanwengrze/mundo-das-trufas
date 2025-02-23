@@ -57,22 +57,6 @@ export default function CheckoutSuccessPage() {
             <p className="text-muted-foreground">Obrigado por comprar conosco! Seu pedido já está sendo processado e logo será entregue.</p>
           </motion.div>
         </CardHeader>
-        {/* <CardContent className="space-y-4">
-          <div className="border rounded-lg p-4 space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-500">Order ID</span>
-              <span className="font-medium">#123456789</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-500">Date</span>
-              <span className="font-medium">{new Date().toLocaleDateString()}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-500">Amount</span>
-              <span className="font-medium">$99.99</span>
-            </div>
-          </div>
-        </CardContent> */}
         <CardFooter className="flex flex-col sm:flex-row gap-4">
           <Button variant="outline" className="w-full sm:w-auto" onClick={() => (window.location.href = "/")}>
             <Icons.home className="mr-2 h-4 w-4" />

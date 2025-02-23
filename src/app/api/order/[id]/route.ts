@@ -62,7 +62,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
       },
      });
 
-    return NextResponse.json(order, { status: 200 });
+    return NextResponse.json( { message: "Pedido removido com sucesso." }, { status: 200 });
   } catch (error) {
     return handleError(error);
   }
