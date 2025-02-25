@@ -2,16 +2,14 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
-
+import { AppError } from "@/errors/app-error";
+import { handleError } from "@/middlewares/error-handler";
 
 export async function POST() {
   const session = await auth();
 
   if (!session?.user?.id) {
-    return NextResponse.json(
-      { error: "Usuário não autenticado." },
-      { status: 401 }
-    );
+    throw new AppError("Usuário nao autenticado.");
   }
 
   try {
@@ -97,10 +95,6 @@ export async function POST() {
 
     return NextResponse.json({ url: stripeSession.url }, { status: 200 });
   } catch (error) {
-
-    return NextResponse.json(
-      { error: "Erro ao processar pagamento." },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 }

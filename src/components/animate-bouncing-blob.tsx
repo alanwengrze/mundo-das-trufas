@@ -25,11 +25,11 @@ export function AnimateBouncingBlob() {
   );
 }
 
-function getRandom() {
-  return Math.random() * 100 + 200;
-}
+// function getRandom() {
+//   return Math.random() * 100 + 200;
+// }
 
-// Função para variar a duração da animação
-function getRandomDuration() {
-  return Math.random() * 8 + 10;
-}
+// // Função para variar a duração da animação
+// function getRandomDuration() {
+//   return Math.random() * 8 + 10;
+// }

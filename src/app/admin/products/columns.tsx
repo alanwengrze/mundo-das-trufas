@@ -9,7 +9,7 @@ import Image from "next/image"
 import type { ProductType } from "@/schemas/product.schema"
 import { FullCategoryType } from "@/schemas/category.schema"
 import Link from "next/link"
-import { useProduct } from "@/contexts/product-context"
+// import { useProduct } from "@/contexts/product-context"
 import { 
   DropdownMenuItem,
  } from "@/components/ui/dropdown-menu"
@@ -136,14 +136,14 @@ export const columns: ColumnDef<ProductType>[] = [
     accessorKey: "id",
     header: () => <div>Ações</div>,
     cell: ({getValue})=> {
-      const {deleteProduct} = useProduct()
       const value = getValue()
       const id = value as string
 
    
      const handleDelete = async () => {
        try {
-         await deleteProduct(id);
+        //  await deleteProduct(id);
+        console.log("deletou ")
          
        } catch (error) {
          console.error(error);
