@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { CartProduct } from "./cart-product"
-import { Card, CardContent,  CardFooter, CardHeader, CardTitle } from "./ui/card"
+import { Card, CardContent,  CardDescription,  CardFooter, CardHeader, CardTitle } from "./ui/card"
 import { Buy } from "./buy"
 import { useState } from "react"
 import { FullProductType } from "@/schemas/product.schema"
@@ -12,7 +12,6 @@ import { useRouter } from "next/navigation"
 import { priceFormatter } from "@/utils/dateFormatter"
 import Link from "next/link"
 import { Icons } from "./icons"
-
 interface ProductCardProps {
   product: FullProductType
 }
@@ -40,29 +39,31 @@ export const ProductCard = ({product}: ProductCardProps) => {
   }
 
   return (
-    <Card className="min-h-[250px] max-w-72 px-2 rounded-sm flex flex-col items-center mt-20">
-      <Image
-        src={product.imageUrl || "/placeholder.svg?height=200&width=200"}
-        alt={product.name}
-        width={200}
-        height={200}
-        loading="eager"
-        className="mx-auto object-cover h-40 w-40 -mt-20 rounded-full"
-      />
-      
+    <Card className="max-w-80 px-2 rounded-sm flex flex-col items-center mt-20 md:mt-0">
+      <div className="flex items-center gap-4">
+        <Image
+          src={product.imageUrl || "/placeholder.svg?height=200&width=200"}
+          alt={product.name}
+          width={200}
+          height={200}
+          loading="eager"
+          className="mx-auto object-cover h-20 w-20 -mt-10 rounded-full md:mt-0"
+        />
+        <CardHeader>
+          <CardTitle className="mx-auto px-4 text-sm uppercase text-rose-600 bg-rose-200 border border-rose-600 font-semibold text-center rounded-md">
+            {product.category.name}
+          </CardTitle>
+          <CardDescription className="text-md capitalize text-center">{product.name}</CardDescription>
+        </CardHeader>
+      </div>
       <CardContent className="flex flex-col items-center gap-4">
-      <CardHeader>
-        <CardTitle className="m-auto px-4 text-lg uppercase text-rose-400 bg-rose-200 border border-rose-400 font-semibold text-center rounded-md">
-          {product.category.name}
-        </CardTitle>
-      </CardHeader>
-        <h1 className="text-xl capitalize text-center">{product.name}</h1>
+      
           { 
             product.quantityInStock <= 0 || !isCustomer ? (
-              <span className="text-rose-500 ml-2 font-thin">Indisponível</span>
+              <span className="text-primary ml-2 font-thin">Indisponível</span>
             ) : (
               <CardFooter className="flex justify-between items-center gap-3">
-              <p className="text-xl text-muted-foreground font-semibold">{priceFormatter.format(product.price)}</p>
+              <p className="text-md text-muted-foreground font-semibold">{priceFormatter.format(product.price)}</p>
               <div className="flex items-center gap-3">
                 <Buy 
                   quantity={quantity}
@@ -82,9 +83,7 @@ export const ProductCard = ({product}: ProductCardProps) => {
             </CardFooter>
             )
           }
-          
       </CardContent>
-     
     </Card>
   )
 }

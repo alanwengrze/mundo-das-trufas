@@ -71,6 +71,7 @@ export const Header = () => {
           <MenubarTrigger>{<Icons.menu />}</MenubarTrigger>
           <MenubarContent className="glass flex flex-col items-baseline gap-3">
             {items.map((item) => (
+              item.visible &&
               <MenubarItem className="flex gap-2" key={item.title} onClick={() => push(item.url)}>
                   {item.title === "Carrinho" && itemsCart.length > 0 && (
                     <div className="relative -ml-2">
@@ -82,7 +83,7 @@ export const Header = () => {
                 {item.title}
               </MenubarItem>
             ))}
-            <MenubarItem>
+            <MenubarItem asChild>
               <AuthButton />
             </MenubarItem>
           </MenubarContent>

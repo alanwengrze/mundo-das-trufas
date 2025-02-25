@@ -36,10 +36,10 @@ export function ProductDetails() {
   if(!product) return <div>Produto não encontrado</div>
 
   return (
-    <div className="container mx-auto px-4 py-6 md:py-12 max-w-6xl lg:flex ">
-      <Card>
+    <div className="container mx-auto px-4 py-6 md:py-12 max-w-6xl lg:flex justify-center items-center">
+      <Card className="">
         <CardContent className="p-6 md:p-8">
-          <div className="grid gap-6 md:grid-cols-2 lg:gap-12">
+          <div className="grid gap-6 sm:grid-cols-2 lg:gap-12">
             <div className="relative aspect-square max-h-60">
               <Image src={product.imageUrl || "/placeholder.svg?height=96&width=96"} alt={product.name} fill className="object-cover rounded-lg" priority />
             </div>

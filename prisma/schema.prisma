@@ -34,7 +34,7 @@ enum Role {
 
 model Address {
   id           String  @id @default(uuid())
-  userId       String  @unique
+  userId       String
   street       String
   number       String
   neighborhood String
@@ -167,7 +167,7 @@ model Order {
 
 enum OrderStatusEnum {
   PENDING
-  SUCCESS
+  PROCESSING
   COMPLETED
   CANCELED
 }
@@ -184,15 +184,22 @@ model ItemOrder {
 }
 
 model Payment {
-  id          String   @id @default(uuid())
-  orderId     String   @unique
+  id          String            @id @default(uuid())
+  orderId     String            @unique
   stripeId    String
-  status      String
-  paymentDate DateTime @default(now())
+  status      PaymentStatusEnum @default(PENDING)
+  paymentDate DateTime          @default(now())
   type        String
   amount      Float
   metadata    Json?
-  order       Order    @relation(fields: [orderId], references: [id])
+  order       Order             @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   @@map("payments")
+}
+
+enum PaymentStatusEnum {
+  PENDING
+  COMPLETED
+  CANCELED
+  REFUNDED
 }

@@ -40,7 +40,7 @@ body {
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 352.58 95.7% 81.76%;
   }
 
   .dark {
@@ -75,7 +75,7 @@ body {
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 352.58 95.7% 81.76%;
   }
 }
 
@@ -85,13 +85,9 @@ body {
     @apply border-border;
   }
   .glass {
-    background: rgba(255, 255, 255, 0.00);
+    background: rgba(255, 255, 255, 0.0);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(4px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-  }
-  .scrollbar::-webkit-scrollbar {
-    display: none;
   }
   .custom-bg {
     background-image: url('/bg-grain.png');

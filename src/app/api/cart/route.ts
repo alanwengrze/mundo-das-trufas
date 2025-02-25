@@ -5,10 +5,7 @@ import { handleError } from "@/middlewares/error-handler";
 export async function GET() {
   try {
     const cartService = new CartService();
-    // Busca o carrinho do usuário pelo userId
     const cart = await cartService.get();
-
-    // Retorna os itens do carrinho
     return NextResponse.json(cart.itemsCart, { status: 200 });
   } catch (error) {
     return handleError(error);

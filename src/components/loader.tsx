@@ -1,9 +1,10 @@
 import { Spinner } from "./spinner";
-
+import { motion } from "motion/react";
 export function Loader() {
   return (
-    <div className="flex items-center justify-center h-screen">
+    <motion.div 
+      className="flex items-center justify-center h-screen">
       <Spinner />
-    </div>
+    </motion.div>
   )
 }

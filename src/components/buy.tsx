@@ -7,7 +7,7 @@ interface BuyProps {
 }
 export const Buy = ({quantity, onMinus, onPlus}: BuyProps) => {
   return (
-    <div className="flex items-center px-2 py-1 gap-1 duration-200 border border-primary rounded-sm">
+    <div className="flex items-center px-2 py-1 gap-1 duration-200 bg-primary/20 rounded-sm">
       <Button 
         onClick={onMinus}
         variant="ghost"

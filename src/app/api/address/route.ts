@@ -46,8 +46,7 @@ export async function GET() {
         userId: session.user.id,
       },
     });
-    console.log("address", address)
-
+    
     return NextResponse.json(address, { status: 200 });
   } catch (error) {
     return handleError(error);

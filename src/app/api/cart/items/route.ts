@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { ItemsCartService } from "@/services/itemsCart.service";
 import { handleError } from "@/middlewares/error-handler";
 
-// Adiciona um item ao carrinho do usuário
 export async function POST(request: Request) {
   try {
     const { productId, quantity } = await request.json();

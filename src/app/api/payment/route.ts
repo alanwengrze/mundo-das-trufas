@@ -28,6 +28,42 @@ export async function POST() {
       );
     }
 
+    const address = await prisma.address.findFirst({
+      where: { userId: cart.userId || session.user.id },
+    });
+
+    
+    if (!address) {
+      return NextResponse.json(
+        { error: "Endereço nao encontrado." },
+        { status: 400 }
+      );
+    }
+
+    const amountPrice = cart.itemsCart.reduce((total, item) => total + item.quantity * item.product.price, 0);
+
+
+    const order = await prisma.order.create({
+      data: {
+        userId: session.user.id,
+        cartId: cart.id,
+        addressId: address.id,
+        status: "PENDING",
+        amount: amountPrice,
+        itemsOrder: {
+          create: cart.itemsCart.map((item) => ({
+            productId: item.product.id,
+            quantity: item.quantity
+          }))
+        }
+      },
+      include: {
+        itemsOrder: true
+      }
+    });
+
+    console.log("Detalhes da ordem criada: ", order)
+
     // Criar os itens da sessão do Stripe
     const lineItems = cart.itemsCart.map((item) => ({
       price_data: {
@@ -37,21 +73,12 @@ export async function POST() {
           images: item.product.imageUrl ? [item.product.imageUrl] : [],
           
         },
-        unit_amount: Math.round(item.product.price * 100), // Stripe aceita centavos
+        unit_amount: Math.round(item.product.price * 100), 
       },
       quantity: item.quantity,
     }));
 
-    const address = await prisma.address.findFirst({
-      where: { userId: cart.userId || session.user.id },
-    });
-
-    if (!address) {
-      return NextResponse.json(
-        { error: "Endereço nao encontrado." },
-        { status: 400 }
-      );
-    }
+    console.log("Itens da sessão do Stripe: ", lineItems)
 
     // Criar a sessão de checkout no Stripe
     const stripeSession = await stripe.checkout.sessions.create({
@@ -62,16 +89,15 @@ export async function POST() {
       cancel_url: `${process.env.NEXT_PUBLIC_URL}/`,
       metadata: { 
         userId: session.user.id,
-        cartId: cart.id,
-        addressId: address.id,
+        orderId: order.id
       },
     });
 
-    console.log("Sessão Stripe criada:", stripeSession);
+    console.log("Sessão de checkout criada: ", stripeSession)
 
     return NextResponse.json({ url: stripeSession.url }, { status: 200 });
   } catch (error) {
-    console.error("Erro ao criar sessão do Stripe:", error);
+
     return NextResponse.json(
       { error: "Erro ao processar pagamento." },
       { status: 500 }

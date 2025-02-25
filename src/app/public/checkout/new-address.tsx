@@ -50,7 +50,7 @@ export function NewAddress() {
 
           <FormField name="neighborhood" control={form.control} render={({field}) => (
             <FormItem>
-              <FormLabel>Cidade</FormLabel>
+              <FormLabel>Bairro</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>

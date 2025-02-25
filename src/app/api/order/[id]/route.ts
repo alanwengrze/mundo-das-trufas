@@ -23,10 +23,6 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
       },
     });
 
-    console.log("order", order)
-
-
-
   return NextResponse.json(order, { status: 200 });
   } catch (error) {
     return handleError(error);
@@ -34,7 +30,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 }
 
 export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  console.log(req);
+  // console.log(req);
   try {
     const id = (await params).id;
 
@@ -48,7 +44,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
       return NextResponse.json({ error: "Pedido não encontrado." }, { status: 404 });
     }
 
-    const order = await prisma.order.delete({ 
+    await prisma.order.delete({ 
       where: { id: id },
       include: {
         itemsOrder: {

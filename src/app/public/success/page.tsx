@@ -20,10 +20,7 @@ export default function CheckoutSuccessPage() {
 
   async function finalizeOrder() {
     try {
-      const response = await api.post("/order", {
-        sessionId,
-      });
-
+      const response = await api.get(`/api/order-status?session_id=${sessionId}`);
       if (response.status !== 201) throw new Error("Erro ao finalizar pedido");
       mutate("/cart");
       mutate("/order");

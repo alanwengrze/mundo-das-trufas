@@ -8,6 +8,7 @@ import { DataTable } from "@/components/data-table";
 import { columns } from "./columns";
 import { Title } from "@/components/title";
 import { Loader } from "@/components/loader";
+import { AnimateTransactionWrapper } from "@/components/animate-transaction-wrapper";
 
 export default function Orders() {
   const {data: session, status } = useSession();
@@ -21,12 +22,12 @@ export default function Orders() {
   );
   if(isLoading) return <Loader />
   return (
-    <div className="container mx-auto">
+    <AnimateTransactionWrapper className="container mx-auto">
       <Title title={ isAdmin ? "Pedidos" : "Meus pedidos"} />
       <DataTable 
         columns={columns} 
         data={orders || []}
       />
-    </div>
+    </AnimateTransactionWrapper>
   );
 }
