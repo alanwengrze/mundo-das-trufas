@@ -7,8 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import  Link  from "next/link";
 import { Title } from "@/components/title";
+import { Loader } from "@/components/loader";
 export default function ProductsPage() {
-  const {products} = useProduct();
+  const {products, loading} = useProduct();
+  if(loading) return <Loader />
   return(
      <div className="container mx-auto py-10">
       <section className="flex items-center justify-between">
@@ -18,6 +20,7 @@ export default function ProductsPage() {
       <DataTable 
         columns={columns} 
         data={products || []}
+        inputFilter
       />
     </div>
   )

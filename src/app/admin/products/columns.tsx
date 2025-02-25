@@ -4,18 +4,22 @@ import { ColumnDef } from "@tanstack/react-table"
 import { priceFormatter } from "@/utils/dateFormatter"
 import clsx from "clsx"
 import { Button } from "@/components/ui/button"
-import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogAction, AlertDialogCancel, AlertDialogTitle, AlertDialogHeader, AlertDialogFooter } from "@/components/ui/alert-dialog"
 import { DataTableColumnHeader } from "@/components/data-table-column-header"
 import Image from "next/image"
 import type { ProductType } from "@/schemas/product.schema"
+import { FullCategoryType } from "@/schemas/category.schema"
 import Link from "next/link"
 import { useProduct } from "@/contexts/product-context"
 import { 
   DropdownMenuItem,
  } from "@/components/ui/dropdown-menu"
  import { MoreAction } from "@/components/more-action"
-import { AlertDialogDescription } from "@radix-ui/react-alert-dialog"
 import { ButtonDestructive } from "@/components/button-destructive"
+import { DataTableFilterByIndex } from "@/components/data-table-filter-by-index"
+import swr from "swr"
+import { api } from "@/lib/axios"
+
+
 export const columns: ColumnDef<ProductType>[] = [
   {
     accessorKey: "imageUrl",
@@ -49,7 +53,18 @@ export const columns: ColumnDef<ProductType>[] = [
   },
   {
     accessorKey: "quantityInStock",
-    header: () => <div className="text-left">Status</div>,
+    header:({column}) => {
+      const status = ['Em estoque', 'Sem estoque', 'Pouco estoque']
+      const filterOptions = status.map((status)=> {
+        return {
+          label: status,
+          value: status
+        }
+      })
+      return (
+        <DataTableFilterByIndex filterOptions={filterOptions} column={column} title="Estoque"/>
+      )
+    },
     cell: ({getValue}) => {
       const value = getValue()
       const status = value as number
@@ -86,8 +101,27 @@ export const columns: ColumnDef<ProductType>[] = [
   {
     accessorKey: "category.name",
     header:({column}) => {
+      const {data: categories} = swr<FullCategoryType[]>("/categories", 
+        async (url: string) => {
+          const response = await api.get(url);
+          return response.data;
+        }
+      )
+
+      if(!categories) return <div>Carregando...</div>
+      
       return (
-        <DataTableColumnHeader  column={column} title="Categoria"/>
+        <DataTableFilterByIndex 
+          filterOptions={[
+            { label: "Todos", value: "" },
+            ...categories.map((category) => ({
+              label: category.name,
+              value: category.name,
+            })),
+          ]} 
+          column={column} 
+          title="Categoria" 
+        />
       )
     },
     cell: ({getValue})=> {
@@ -122,6 +156,13 @@ export const columns: ColumnDef<ProductType>[] = [
             <Link href={`/public/products/${id}`}>
               <Button variant="ghost" size="sm">
                 Visualizar
+              </Button>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href={`/admin/products/${id}`}>
+              <Button variant="ghost" size="sm">
+                Editar
               </Button>
             </Link>
           </DropdownMenuItem>

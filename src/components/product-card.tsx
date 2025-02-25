@@ -10,6 +10,8 @@ import { useSession } from "next-auth/react"
 import { useCart } from "@/contexts/cart-context"
 import { useRouter } from "next/navigation"
 import { priceFormatter } from "@/utils/dateFormatter"
+import Link from "next/link"
+import { Icons } from "./icons"
 
 interface ProductCardProps {
   product: FullProductType
@@ -70,6 +72,13 @@ export const ProductCard = ({product}: ProductCardProps) => {
                   status === "authenticated" ? <CartProduct addToCart={handleAddToCart}/> : <CartProduct addToCart={() => push("/public/auth")}/>
                 }
               </div>
+              <Link 
+                href={`/public/products/${product.id}`}
+                className="absolute bottom-2 right-2 flex items-center gap-1 text-sm text-muted-foreground hover:text-primary"
+              >
+                Ver detalhes 
+                <Icons.chevronRight className="h-4 w-4"/>
+              </Link>
             </CardFooter>
             )
           }

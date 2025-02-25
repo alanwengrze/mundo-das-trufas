@@ -1,4 +1,4 @@
-import { Loader2, LogIn, LogOut, ShoppingCart, Plus, Minus, Trash, Home, History, Check, LucideMenu, ShoppingBag, MoreHorizontal, PlusSquare, CheckCircle2, ArrowUpRight, ArrowUpDown } from 'lucide-react'
+import { Loader2, LogIn, LogOut, ShoppingCart, Plus, Minus, Trash, Home, History, Check, LucideMenu, ShoppingBag, MoreHorizontal, PlusSquare, CheckCircle2, ArrowUpRight, ArrowUpDown, Edit, ChevronRight, Info } from 'lucide-react'
 
 export const Icons = {
   spinner: Loader2,
@@ -8,6 +8,7 @@ export const Icons = {
   plus: Plus,
   minus: Minus,
   trash: Trash,
+  edit: Edit,
   home: Home,
   history: History,
   check: Check,
@@ -17,5 +18,7 @@ export const Icons = {
   plusSquare: PlusSquare,
   checkCircle: CheckCircle2,
   arrowUpRight: ArrowUpRight,
-  arrowUpDown: ArrowUpDown
+  arrowUpDown: ArrowUpDown,
+  chevronRight: ChevronRight,
+  info: Info
 }

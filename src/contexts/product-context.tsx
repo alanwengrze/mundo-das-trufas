@@ -22,11 +22,11 @@ export function ProductProvider({ children }: ProductProviderProps) {
   const [loading, setLoading] = useState(true);
   
   // Busca os itens do carrinho
-  const { data: products, error, mutate } = useSWR<FullProductType[]>(
+  const { data: products, error, mutate, isLoading } = useSWR<FullProductType[]>(
     "/products",
     async (url: string) => {
-      setLoading(false);
       const response = await api.get(url);
+      isLoading && setLoading(false);
       return response.data;
     }
   );

@@ -17,12 +17,12 @@ export class CartRepository {
       where: { userId},
       include: {
         itemsCart: {
+          orderBy: { product: { name: "asc" } },
           include: {
             product: {include: { category: true }},    
           },
         },
       },
-
     }); 
     return cart;
   }
@@ -38,6 +38,19 @@ export class CartRepository {
     return cart;
   }
 
+  async resetCart(userId: string) {
+    const cart = await prisma.cart.update({
+      where: { userId },
+      data: {
+        amount: 0,
+        itemsCart: {
+          deleteMany: {}
+        }
+      },
+    });
+    return cart;
+  }
+
   async getCartId( userId: string) {
     const cart = await prisma.cart.findUnique({ 
       where: { userId },
@@ -45,8 +58,4 @@ export class CartRepository {
     return cart?.id;
   }
 
-  async clearCart(userId: string) {
-    const cart = await prisma.cart.deleteMany({ where: { userId } });
-    return cart;
-  }
 }

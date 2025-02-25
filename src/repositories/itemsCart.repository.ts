@@ -44,6 +44,15 @@ export class ItemsCartRepository {
     return item
   }
 
+  async removeAll(cartId: string) {
+    const item = await prisma.itemCart.deleteMany({
+      where: {
+        cartId
+      }
+    })
+    return item
+  }
+
   async update(productId: string, quantity: number, cartId: string) {
     const item = await prisma.itemCart.updateMany({
       where: {

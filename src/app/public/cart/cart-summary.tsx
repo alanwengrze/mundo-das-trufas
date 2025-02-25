@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/spinner";
 import { useReward } from 'react-rewards';
 import { redirect } from "next/navigation";
+import { Title } from "@/components/title";
+import { Loader } from "@/components/loader";
 
 export const CartSummary = () => {
   const { itemsCart, error, removeFromCart, changeQuantity, loading} = useCart();
@@ -31,6 +33,7 @@ export const CartSummary = () => {
     redirect("/public/checkout");
   }
 
+  if(loading) return <Loader />
   if (error) return <p>Erro: {error}</p>;
   if ( itemsCart.length === 0) return <VoidCart />;
   const totalItemsPrice = itemsCart.reduce((total, item) => total + item.product.price * item.quantity, 0);
@@ -39,8 +42,8 @@ export const CartSummary = () => {
 
   return (
   <div className="space-y-4">
-    <h1 className="text-3xl font-bold mb-8">Meu carrinho</h1>
-    <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 ">
+    <Title title="Meu carrinho" />
+    <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
     {
       itemsCart.map((item) => (
         <ItemCart 
@@ -53,7 +56,7 @@ export const CartSummary = () => {
       ))
     }
     </div>
-     <div className="lg:col-span-2">
+     <div className="max-w-2xl pb-4">
         <Card>
           <CardHeader>
             <CardTitle>Detalhes do pedido</CardTitle>

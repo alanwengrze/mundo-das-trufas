@@ -3,12 +3,15 @@ import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { ProductsService } from "@/services/products.service";
+
 import { handleError } from "@/middlewares/error-handler";
 import { AppError } from "@/errors/app-error";
+import { CartService } from "@/services/cart.service";
 
 export async function POST(request: Request) {
   
   const session = await auth();
+  const cartService = new CartService();
 
   if (!session?.user?.id) {
     throw new AppError("Usuário nao autenticado.");
@@ -71,18 +74,15 @@ export async function POST(request: Request) {
     });
     
     if(order.status === "COMPLETED"){
-      order.itemsOrder.map(async (item) => {
+      for (const item of order.itemsOrder) {
         await productsService.decrementStock(item.productId, item.quantity);
-      });
+      }
       console.log("Produtos atualizados:", order.itemsOrder);
     }
 
     console.log("Ordem criada:", order);
     // Limpa o carrinho do usuário
-    await prisma.cart.update({
-      where: { id: cart.id },
-      data: { itemsCart: { deleteMany: {} } },
-    });
+    await cartService.resetCart();
 
     return NextResponse.json(order, { status: 201 });
   } catch (error) {
@@ -99,9 +99,9 @@ export async function GET() {
   }
 
   try {
-
     if(session.user.role === "ADMIN"){
       const orders = await prisma.order.findMany({
+        orderBy: { orderDate: "desc" },
         include: {
           itemsOrder: {
             include: {
@@ -117,6 +117,7 @@ export async function GET() {
       where: { 
         userId: session.user.id,
       },
+      orderBy: { orderDate: "desc" },
       include: {
         itemsOrder: {
           include: {

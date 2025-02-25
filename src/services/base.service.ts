@@ -18,7 +18,7 @@ export class BaseService {
     if (!session?.user.id) {
       throw new Error("Usuário não autenticado.");
     }
-    console.log("Usuario autenticado", session.user.id)
+    console.log("Usuário autenticado", session.user.id)
     return session.user.id
   }
 

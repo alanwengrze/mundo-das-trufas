@@ -1,4 +1,3 @@
-import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { ProductsService } from "@/services/products.service";
 import { handleError } from "@/middlewares/error-handler";
@@ -18,20 +17,17 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   }
 }
 
-export async function PUT(req: NextRequest){
-  const body = await req.json();
-
-  const product = await prisma.product.update({
-    where: {
-      id: body.id,
-    },
-    data: {
-      name: body.name,
-      description: body.description,
-      price: body.price,
-    },
-  });
-  return NextResponse.json(product, {status: 200});
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const id = (await params).id;
+  const data = await req.json();
+  const productService = new ProductsService();
+  try {
+    await productService.update(id, data);
+    return NextResponse.json({message: "Produto atualizado com sucesso."}, {status: 200});
+  } catch (error) {
+    return handleError(error);
+  }
+  
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {

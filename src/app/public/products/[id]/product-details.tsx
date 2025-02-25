@@ -10,25 +10,37 @@ import useSWR from "swr"
 import type { FullProductType } from "@/schemas/product.schema"
 import { api } from "@/lib/axios"
 import { priceFormatter } from "@/utils/dateFormatter"
+import { Loader } from "@/components/loader"
+import { useCart } from "@/contexts/cart-context"
+import { Spinner } from "@/components/spinner"
 export function ProductDetails() {
-
+  const { addToCart, loading } = useCart()
   const { id } = useParams();
   
-  const { data: product } = useSWR<FullProductType>(`/products/${id}`, 
+  const { data: product, isLoading } = useSWR<FullProductType>(`/products/${id}`, 
     async (url: string) => {
       const response = await api.get(url);
       return response.data;
     }
   );
 
-  if (!product) return <div>Loading...</div>;
+  async function handleAddToCart() {
+    try {
+      addToCart(id as string, 1);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  if(isLoading) return <Loader />
+  if(!product) return <div>Produto não encontrado</div>
 
   return (
-    <div className="container mx-auto px-4 py-6 md:py-12 max-w-6xl">
+    <div className="container mx-auto px-4 py-6 md:py-12 max-w-6xl lg:flex ">
       <Card>
         <CardContent className="p-6 md:p-8">
           <div className="grid gap-6 md:grid-cols-2 lg:gap-12">
-            <div className="relative aspect-square">
+            <div className="relative aspect-square max-h-60">
               <Image src={product.imageUrl || "/placeholder.svg?height=96&width=96"} alt={product.name} fill className="object-cover rounded-lg" priority />
             </div>
             <div className="grid gap-4 md:gap-8">
@@ -46,8 +58,14 @@ export function ProductDetails() {
                 </p>
               </div>
               <Separator />
-              <Button size="lg" className="w-full md:w-auto">
-                Comprar
+              <Button 
+                onClick={handleAddToCart} 
+                size="lg" 
+                className="w-full md:w-auto"
+                disabled={loading}
+              >
+                {loading && <Spinner />}
+                Adicionar ao carrinho
               </Button>
             </div>
           </div>

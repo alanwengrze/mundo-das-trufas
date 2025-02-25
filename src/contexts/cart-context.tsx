@@ -10,6 +10,7 @@ interface CartContextType {
   itemsCart: ItemCartType[];
   addToCart: (productId: string, quantity: number) => void;
   removeFromCart: (productId: string) => void;
+  removeAll: (cartId: string) => void;
   changeQuantity: (productId: string, quantity: number) => void;
   error: string | null;
   loading: boolean
@@ -21,14 +22,12 @@ interface CartProviderProps {
 }
 export function CartProvider({ children }: CartProviderProps) {
   const { status } = useSession();
-  const [loading, setLoading] = useState(true);
 
   // Busca os itens do carrinho
-  const { data: itemsCart, error, mutate } = useSWR<ItemCartType[]>(
+  const { data: itemsCart, error, mutate, isLoading } = useSWR<ItemCartType[]>(
     status === "authenticated" ? "/cart" : null,
     async (url: string) => {
       const response = await api.get(url);
-      setLoading(false);
       return response.data;
     }
   );
@@ -36,7 +35,6 @@ export function CartProvider({ children }: CartProviderProps) {
   // Adiciona um produto ao carrinho
   async function addToCart(productId: string, quantity: number) {
    try {
-    setLoading(true);
     await api.post(`/cart/items`, {
       productId,
       quantity
@@ -44,13 +42,11 @@ export function CartProvider({ children }: CartProviderProps) {
     mutate();
    } catch (error) {
      console.error(error);
-     setLoading(false);
    }
   }
 
   async function removeFromCart(productId: string) {
     try {
-      setLoading(true);
       await api.delete(`/cart/items/${productId}`);
       mutate();
     }catch (err) {
@@ -59,8 +55,18 @@ export function CartProvider({ children }: CartProviderProps) {
   }
 
   async function changeQuantity(productId: string, quantity: number) {
-    setLoading(true);
     try {
+      // await api.patch(`/cart/items/${productId}`, {
+      //   quantity
+      // });
+      mutate(
+        (currentCart = []) => 
+          currentCart.map(item => 
+            item.productId === productId ? { ...item, quantity } : item
+          ),
+        false // false -> Evita revalidar a API imediatamente
+      );
+
       await api.patch(`/cart/items/${productId}`, {
         quantity
       });
@@ -68,7 +74,15 @@ export function CartProvider({ children }: CartProviderProps) {
       mutate();
     }catch (error) {
       console.error(error);
-      setLoading(false);
+    }
+  }
+
+  async function removeAll() {
+    try {
+      await api.put("/cart");
+      mutate();
+    }catch (error) {
+      console.error(error);
     }
   }
 
@@ -79,8 +93,9 @@ export function CartProvider({ children }: CartProviderProps) {
         addToCart,
         changeQuantity,
         removeFromCart,
+        removeAll,
         error: error?.message || null,
-        loading
+        loading: isLoading
       }}
     >
       {children}

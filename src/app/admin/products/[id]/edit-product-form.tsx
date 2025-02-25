@@ -18,7 +18,7 @@ import {
 
 import { api } from "@/lib/axios"
 import { toast } from "sonner"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import axios from "axios"
 import Image from "next/image"
 import useSWR, { mutate } from "swr"
@@ -26,9 +26,14 @@ import type { FullCategoryType } from "@/schemas/category.schema"
 import { ImageIcon } from "lucide-react"
 import { Icons } from "@/components/icons"
 import { Spinner } from "@/components/spinner"
+import { useParams } from "next/navigation"
+import { Loader } from "@/components/loader"
 type FormValues = Omit<ProductType, "category">
-export function ProductForm() {
-
+export function EditProductForm() {
+  const { id } = useParams();
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  
   //buscar as categorias
   const { data: categories} = useSWR<[FullCategoryType]>(
     "/categories",
@@ -37,18 +42,24 @@ export function ProductForm() {
       return response.data;
     }
   );
-  
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
 
+  const { data: product, isLoading } = useSWR<ProductType>(
+    `/products/${id}`,
+    async (url: string) => {
+      const response = await api.get(url);
+      return response.data;
+    }
+  );
+  
   const form = useForm<FormValues>({
     resolver: zodResolver(productSchema.omit({ category: true })),
-    defaultValues: {
+    defaultValues: product ??{
       name: "",
       description: "",
       price: 0,
       imageUrl: "",
       quantityInStock: 0,
+      categoryId: "",
     }
   })
 
@@ -87,26 +98,39 @@ export function ProductForm() {
     }
    
   }
-
+  
   async function onSubmit(data: FormValues) {
     console.log("Data:", data);
     try {
-      await api.post("/products", {
+      await api.put(`/products/${id}`, {
         ...data,
         imageUrl: imageUrl
       })
       mutate("/products")
-      toast.success("O produto foi criado com sucesso!", {
-        description: `Um novo produto foi cadastrado com sucesso.`,
-      })
     } catch (error) {
       console.error(error);
-      toast.error("Falha ao criar o produto!", {
-        description: "Ocorreu um erro ao criar o produto, por favor, tente novamente.",
-      })
     }
   }
 
+  useEffect(() => {
+    if (product) {
+      form.reset({
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl,
+        quantityInStock: product.quantityInStock,
+        categoryId: product.categoryId
+      })
+
+      if (product.imageUrl) {
+        setImageUrl(product.imageUrl);
+        setPreview(product.imageUrl);
+      }
+    }
+  }, [product, form]);
+  if(isLoading) return <Loader />
+  if(!product) return
   return (
     <div className="max-w-2xl mx-auto p-6 space-y-8">
       <Form {...form}>
@@ -117,7 +141,7 @@ export function ProductForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Nome do produto</FormLabel>
-                <FormControl>
+                <FormControl >
                   <Input placeholder="Ex: Trufa de chocolate" {...field} />
                 </FormControl>
                 <FormMessage />
@@ -131,7 +155,7 @@ export function ProductForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Descrição</FormLabel>
-                <FormControl>
+                <FormControl >
                   <Textarea placeholder="Ex: Deliciosa trufa de chocolate" className="resize-none" {...field} />
                 </FormControl>
                 <FormMessage />
@@ -241,14 +265,14 @@ export function ProductForm() {
             {form.formState.isSubmitting ? (
               <> 
                 <Spinner/>
-                <span>Criando produto...</span>
+                <span>Editando produto</span>
               </>
               
             ):
               (
                 <> 
-                  <Icons.plus/>
-                  <span>Criar produto</span>
+                  <Icons.edit/>
+                  <span>Editar produto</span>
                 </>
               )
             }

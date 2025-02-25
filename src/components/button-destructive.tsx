@@ -3,6 +3,8 @@ import {AlertDialog, AlertDialogCancel, AlertDialogAction, AlertDialogContent, A
 
 interface ButtonDestructiveProps {
   textTrigger: string
+  variantTrigger?: "default" | "destructive" | "outline"
+  icon?: React.ReactNode
   textAction: string
   textCancel: string
   title?: string
@@ -12,6 +14,8 @@ interface ButtonDestructiveProps {
 
 export function ButtonDestructive({
   textTrigger,
+  variantTrigger,
+  icon,
   textAction,
   textCancel,
   title,
@@ -23,8 +27,10 @@ export function ButtonDestructive({
         <AlertDialogTrigger asChild>
           <Button 
             size="sm"
-            variant="ghost"
+            variant={!variantTrigger ? "ghost" : variantTrigger}
+            className="flex items-center gap-2"
           >
+            {icon}
             {textTrigger}
           </Button>
         </AlertDialogTrigger>

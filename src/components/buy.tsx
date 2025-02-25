@@ -1,4 +1,5 @@
 import { Icons } from "./icons";
+import { Button } from "./ui/button";
 interface BuyProps {
   quantity: number
   onMinus: () => void
@@ -6,14 +7,22 @@ interface BuyProps {
 }
 export const Buy = ({quantity, onMinus, onPlus}: BuyProps) => {
   return (
-    <div className="glass shadow border border-primary/20 flex items-center rounded-sm hover:bg-primary/50 px-2 py-1 gap-1 duration-200">
-      <button onClick={onMinus}>
-        <Icons.minus className=" hover:text-secondary duration-200" size={16}/>
-      </button>
+    <div className="flex items-center px-2 py-1 gap-1 duration-200 border border-primary rounded-sm">
+      <Button 
+        onClick={onMinus}
+        variant="ghost"
+        className="py-0 px-2 h-6"
+      >
+        <Icons.minus className="duration-200 p-0" size={16}/>
+      </Button>
       <span>{quantity}</span>
-      <button onClick={onPlus}>
-        <Icons.plus className=" hover:text-secondary duration-200" size={16}/>
-      </button>
+      <Button 
+        onClick={onPlus}
+        variant="ghost"
+        className="py-0 px-2 h-6"
+      >
+        <Icons.plus className="duration-200" size={16}/>
+      </Button>
     </div>
   );
 };

@@ -37,6 +37,10 @@ export class ItemsCartService extends BaseService {
     return this.itemsCartRepository.remove(productId, cartId);
   }
 
+  async removeAll(cartId: string){
+    return this.itemsCartRepository.removeAll(cartId)
+  }
+
   async update(productId: string, quantity: number) {
     const userId = await this.getUserId();
     const cart = await this.getCart(userId);

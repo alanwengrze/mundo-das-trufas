@@ -1,5 +1,5 @@
 import { signOut, useSession } from "next-auth/react";
-import { ButtonNavigation } from "./button-navigation";
+import { ButtonDestructive } from "./button-destructive";
 import { Icons } from "./icons";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
@@ -10,13 +10,17 @@ export function AuthButton() {
   return(
     <>
       {isAuthenticated ? (
-        <Button 
-          onClick={() => signOut({ redirectTo: "/public/auth" })}
-          variant="destructive" 
-        >
-          <Icons.logout/>
-          Sair
-        </Button>
+        <ButtonDestructive 
+          textTrigger="Sair"
+          variantTrigger="outline"
+          icon={<Icons.logout/>}
+          textAction="Sair"
+          textCancel="Cancelar"
+          title="Sair"
+          description="Tem certeza que deseja sair?"
+          onAction={() => signOut({ redirectTo: "/public/auth" })}
+        />
+       
       ) : (
         <Button 
           onClick={() => push("/public/auth")}

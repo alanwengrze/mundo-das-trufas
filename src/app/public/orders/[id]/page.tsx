@@ -15,13 +15,14 @@ import useSWR from "swr";
 import type { FullOrderType } from "@/schemas/order.schema";
 import { api } from "@/lib/axios";
 import { dateFormatter, priceFormatter } from "@/utils/dateFormatter"
+import { Loader } from "@/components/loader"
 
 export default function OrderDetails(){
   const params = useParams();
   const id = params.id
   
   console.log("id da order", id)
-  const { data: order, error } = useSWR<FullOrderType>(
+  const { data: order, error, isLoading } = useSWR<FullOrderType>(
     id ? `/order/${id}` : null, 
     async (url: string) => {
       const response = await api.get(url);
@@ -32,7 +33,8 @@ export default function OrderDetails(){
     console.log(id)
   }, [id])
   if (error) return <p>Erro ao carregar o pedido.</p>;
-  if (!order) return <p>Carregando...</p>;
+  if(isLoading) return <Loader />
+  if(!order) return <p>Esse pedido não existe.</p>;
 
   return(
     <div className="container mx-auto p-4 space-y-6">

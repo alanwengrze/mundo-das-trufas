@@ -7,20 +7,21 @@ import { useSession } from "next-auth/react";
 import { DataTable } from "@/components/data-table";
 import { columns } from "./columns";
 import { Title } from "@/components/title";
+import { Loader } from "@/components/loader";
 
 export default function Orders() {
   const {data: session, status } = useSession();
   const isAdmin = session?.user?.role === "ADMIN";
-  const { data: orders } = useSWR<OrderType[]>(
+  const { data: orders, isLoading } = useSWR<OrderType[]>(
    status === "authenticated" ? "/order" : null, 
     async (url: string) => {
-          const response = await api.get(url);
-          return response.data;
-        }
+      const response = await api.get(url);
+      return response.data;
+    }
   );
-
+  if(isLoading) return <Loader />
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto">
       <Title title={ isAdmin ? "Pedidos" : "Meus pedidos"} />
       <DataTable 
         columns={columns} 

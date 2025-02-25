@@ -6,7 +6,7 @@ export const productSchema = z.object({
   price: z.number().min(0, "O preço do produto precisa ser preenchido."),
   description: z.string().min(1, "A descrição do produto precisa ser preenchida."),
   category: categorySchema,
-  imageUrl: z.string().url().default("/placeholder.svg?height=200&width=200"),
+  imageUrl: z.string().url("A imagem precisa ser preenchida."),
   quantityInStock: z.number().int().min(1, "A quantidade em estoque precisa ser preenchida."),
   active: z.boolean().default(true).optional(),
   categoryId: z.string().min(1, "A categoria precisa ser preenchida."),

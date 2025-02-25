@@ -22,7 +22,7 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="container flex items-center justify-center min-h-[600px] px-4 md:px-6">
+    <div className="container flex items-center justify-center min-h-[600px] px-4 md:px-6 mx-auto">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">Entrar</CardTitle>

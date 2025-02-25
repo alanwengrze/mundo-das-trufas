@@ -9,17 +9,34 @@ import { api } from "@/lib/axios"
 import { MoreAction } from "@/components/more-action"
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { DataTableColumnHeader } from "@/components/data-table-column-header"
-import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { mutate } from "swr"
 import { ButtonDestructive } from "@/components/button-destructive"
+import { DataTableFilterByIndex } from "@/components/data-table-filter-by-index"
 
+const filterStatus = ['COMPLETED', 'CANCELED', 'PENDING', 'SUCCESS']
+const translateStatus:Record<string, string> = {
+  COMPLETED: 'Finalizado',
+  CANCELED: 'Cancelado',
+  PENDING: 'Pendente',
+  SUCCESS: 'Entregue',
+}
 export const columns: ColumnDef<OrderType>[] = [
   {
     accessorKey: "status",
-    header: () => {
+    header: ({column}) => {
       return (
-        <div>Status</div>
+        <DataTableFilterByIndex 
+          column={column} 
+          title="Status" 
+          filterOptions={[
+            {label: 'Todos', value: ''},
+            ...filterStatus.map(status => ({
+              label: translateStatus[status],
+              value: status
+            }))
+          ]}
+        />
       )
     },
     cell: ({getValue}) => {

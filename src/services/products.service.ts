@@ -53,6 +53,13 @@ export class ProductsService {
     return this.productsRepository.delete(id);
   }
 
+  async update(id: string, product: ProductType) {
+    const existingProduct = await this.findByName(product.name);
+    if(existingProduct && existingProduct.id !== id) throw new AppError("Esse produto já existe.");
+    
+    return this.productsRepository.update(id, product);
+  }
+
 
   async decrementStock(productId: string, quantity: number) {
 

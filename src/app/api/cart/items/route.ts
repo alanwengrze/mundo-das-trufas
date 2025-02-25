@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     const itemsCartService = new ItemsCartService();
 
     await itemsCartService.create(productId, quantity);
-
+    
     return NextResponse.json(
       { message: "Item adicionado ao carrinho com sucesso." },
       { status: 200 }
@@ -18,3 +18,4 @@ export async function POST(request: Request) {
     return handleError(error);
   }
 }
+

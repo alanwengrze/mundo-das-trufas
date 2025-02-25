@@ -22,4 +22,9 @@ export class CartService extends BaseService {
     return this.cartRepository.updateCart();
   }
 
+  async resetCart() {
+    const userId = await this.getUserId();
+    return this.cartRepository.resetCart(userId)
+  }
+
 }

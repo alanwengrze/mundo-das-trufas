@@ -54,7 +54,7 @@ export const Header = () => {
   return (
     <>
       <div className="hidden md:sticky md:top-0 z-10 md:block w-full">
-        <div className="glass flex items-center p-4 gap-4">
+        <div className="glass flex items-center p-4 gap-4 border-b border-b-input">
         {isAuthenticated && (
           <SidebarTrigger variant="outline" className="md:sticky"/>
         )}
@@ -66,7 +66,7 @@ export const Header = () => {
         </div>
       </div>
      
-      <Menubar className="py-4 px-2 z-10 md:hidden">
+      <Menubar className="sticky rounded-none border-none py-4 z-10 md:hidden">
         <MenubarMenu>
           <MenubarTrigger>{<Icons.menu />}</MenubarTrigger>
           <MenubarContent className="glass flex flex-col items-baseline gap-3">

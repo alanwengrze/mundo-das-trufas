@@ -7,14 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import { Card,  CardFooter, CardHeader } from "@/components/ui/card";
 import { motion } from "motion/react";
+import { mutate } from "swr";
 export default function CheckoutSuccessPage() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
-  const router = useRouter();
-
+  const {push} = useRouter();
   useEffect(() => {
     if (!sessionId) {
-      router.push("/"); // Se não houver session_id, redireciona para home
+      push("/"); // Se não houver session_id, redireciona para home
       return;
     }
 
@@ -25,7 +25,8 @@ export default function CheckoutSuccessPage() {
       });
 
       if (response.status !== 201) throw new Error("Erro ao finalizar pedido");
-
+      mutate("/cart");
+      mutate("/order");
       console.log("Pedido criado com sucesso!");
     } catch (error) {
       console.error(error);
@@ -33,7 +34,7 @@ export default function CheckoutSuccessPage() {
   }
 
     finalizeOrder();
-  }, [sessionId, router]);
+  }, [sessionId, push]);
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -58,7 +59,7 @@ export default function CheckoutSuccessPage() {
           </motion.div>
         </CardHeader>
         <CardFooter className="flex flex-col sm:flex-row gap-4">
-          <Button variant="outline" className="w-full sm:w-auto" onClick={() => (window.location.href = "/")}>
+          <Button variant="outline" className="w-full sm:w-auto" onClick={() => push("/")}>
             <Icons.home className="mr-2 h-4 w-4" />
             Voltar para home
           </Button>

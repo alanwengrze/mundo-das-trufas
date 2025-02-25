@@ -6,13 +6,13 @@ import {
   SortingState,
   flexRender,
   getCoreRowModel,
+  getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
 
-import { Input } from "@/components/ui/input"
 import { DataTablePagination } from "@/components/data-table-pagination"
 
 import {
@@ -25,15 +25,19 @@ import {
 } from "@/components/ui/table"
 import { useState } from "react"
 import { DataTableViewOptions } from "@/components/data-table-view-options"
+import { Input } from "./ui/input"
+
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  data: TData[],
+  inputFilter?: boolean
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  inputFilter = false
 }: DataTableProps<TData, TValue>) {
 
   const [sorting, setSorting] = useState<SortingState>([])
@@ -46,7 +50,9 @@ export function DataTable<TData, TValue>({
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
+    getFilteredRowModel: getFilteredRowModel(), //
+    getFacetedUniqueValues: getFacetedUniqueValues(), //
+    enableColumnFilters: true,
     state: {
       sorting,
       columnFilters
@@ -57,14 +63,18 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="rounded-md border">
         <div className="flex items-center justify-end p-4">
-          {/* <Input
-            placeholder="Filtrar por valor total..."
-            value={(table.getColumn("amount")?.getFilterValue() as number) ?? ""}
-            onChange={(event) =>
-              table.getColumn("amount")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          /> */}
+          {
+            inputFilter &&
+              <Input
+              placeholder="Filtrar por nome..."
+              value={(table.getColumn("name")?.getFilterValue() as number) ?? ""}
+              onChange={(event) =>
+                table.getColumn("name")?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm"
+            />
+          }
+          
           <DataTableViewOptions table={table} />
         </div>
         <Table>
@@ -103,7 +113,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                  Nenhum resultado.
                 </TableCell>
               </TableRow>
             )}

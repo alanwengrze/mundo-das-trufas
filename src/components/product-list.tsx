@@ -17,7 +17,9 @@ export function ProductList({products}:{products: FullProductType[]}) {
   return (
     <>
       {
-        Object.keys(productsByCategory).map((category) => (
+        Object.keys(productsByCategory)
+        .sort((a, b) => a.localeCompare(b))
+        .map((category) => (
           <Carousel
             key={category}
             className="mb-8"
@@ -33,7 +35,7 @@ export function ProductList({products}:{products: FullProductType[]}) {
                 productsByCategory[category].map((product) => (
                 <CarouselItem 
                   key={product.id}
-                  className="pl-4 md:basis-1/3"
+                  className="pl-4 md:basis-1/2 lg:basis-1/4"
                 >
                   <ProductCard
                     product={product}

@@ -5,6 +5,7 @@ export class ProductsRepository {
   async findAll() {
     const products = await prisma.product.findMany({
       where: { active: true },
+      orderBy: { name: "asc" },
       include: {
         category: {
           select: {
@@ -38,7 +39,7 @@ export class ProductsRepository {
   }
   async findByName(name: string) {
     const product = await prisma.product.findFirst({
-      where: { name },
+      where: { name, active: true },
     });
     return product;
   }
@@ -72,5 +73,21 @@ export class ProductsRepository {
       data: { active: false },
     });
     return product;
+  }
+
+  async update(id: string, product: ProductType) {
+    const updatedProduct = await prisma.product.update({
+      where: { id },
+      data: {
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl,
+        categoryId: product.categoryId,
+        quantityInStock: product.quantityInStock
+      }
+
+    });
+    return updatedProduct;
   }
 }
