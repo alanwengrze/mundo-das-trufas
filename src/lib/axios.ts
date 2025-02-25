@@ -2,8 +2,8 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "sonner";
 
 export const api = axios.create({
-  // baseURL: "https://mundo-das-trufas.vercel.app/api",
-  baseURL: "http://localhost:3000/api",
+  baseURL: "https://mundo-das-trufas.vercel.app/api",
+  // baseURL: "http://localhost:3000/api",
 });
 
 api.interceptors.response.use(
