@@ -44,7 +44,6 @@ export async function POST() {
     const order = await prisma.order.create({
       data: {
         userId: session.user.id,
-        cartId: cart.id,
         addressId: address.id,
         status: "PENDING",
         amount: amountPrice,
@@ -81,6 +80,12 @@ export async function POST() {
     // Criar a sessão de checkout no Stripe
     const stripeSession = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
+      payment_intent_data: {
+        metadata: {
+          userId: session.user.id,
+          orderId: order.id
+        }
+      },
       line_items: lineItems,
       mode: "payment",
       success_url: `${process.env.NEXT_PUBLIC_URL}/public/success?session_id={CHECKOUT_SESSION_ID}`,
@@ -90,6 +95,8 @@ export async function POST() {
         orderId: order.id
       },
     });
+
+
 
     console.log("Sessão de checkout criada: ", stripeSession)
 

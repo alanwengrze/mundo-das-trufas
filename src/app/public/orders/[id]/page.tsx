@@ -43,7 +43,7 @@ export default function OrderDetails(){
         <Badge 
           className={clsx(
             "text-sm",
-            order.status === "PENDING" && "bg-yellow-200 text-yellow-600 border-yellow-600",
+            order.status === "PENDING" && "bg-orange-200 text-orange-600 border-orange-600",
             order.status === "COMPLETED" && "bg-green-200 text-green-600 border-green-600",
             order.status === "CANCELED" && "bg-red-200 text-red-600 border-red-600",
           )}
@@ -62,7 +62,13 @@ export default function OrderDetails(){
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Método de pagamento</span>
-              <span>Credit Card</span>
+              {
+                order.payment?.type === "cart" ? (
+                  <span className="text-muted-foreground">Cartão</span>
+                ) : (
+                  <span className="text-muted-foreground">Pendente</span>
+                )
+              }
             </div>
           </CardContent>
         </Card>
