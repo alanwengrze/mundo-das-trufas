@@ -1,18 +1,32 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { stripe } from "@/lib/stripe";
+// import { stripe } from "@/lib/stripe";
+import Stripe from "stripe";
 import { CartService } from "@/services/cart.service";
 import { OrdersService } from "@/services/orders.service";
 import { PaymentsService } from "@/services/payments.service";
 import { handleError } from "@/middlewares/error-handler";
 export async function POST(req: NextRequest) {
+  const cartService = new CartService();
+  const ordersService = new OrdersService();
+  const paymentsService = new PaymentsService();
   const payload = await req.text();
   const sig = req.headers.get("stripe-signature");
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
-  const cartService = new CartService();
-  const ordersService = new OrdersService();
-  const paymentsService = new PaymentsService();
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: "2024-12-18.acacia",
+  });
+
+  if (!endpointSecret) {
+    return NextResponse.json({ error: "Endpoint Secret ausente" }, { status: 400 });
+  }
+
+  if (!payload) {
+    return NextResponse.json({ error: "Payload ausente" }, { status: 400 });
+  }
+
+  
   if (!sig) {
     return NextResponse.json({ error: "Assinatura ausente" }, { status: 400 });
   }
