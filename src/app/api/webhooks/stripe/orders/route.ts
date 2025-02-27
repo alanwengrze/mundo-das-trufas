@@ -4,6 +4,7 @@ import { stripe } from "@/lib/stripe";
 import { CartService } from "@/services/cart.service";
 import { OrdersService } from "@/services/orders.service";
 import { PaymentsService } from "@/services/payments.service";
+import { handleError } from "@/middlewares/error-handler";
 export async function POST(req: NextRequest) {
   const payload = await req.text();
   const sig = req.headers.get("stripe-signature");
@@ -21,8 +22,8 @@ export async function POST(req: NextRequest) {
   try {
     event = stripe.webhooks.constructEvent(payload, sig, endpointSecret);
   
-  } catch (err) {
-    return NextResponse.json({ error: "Falha na verificação do webhook" }, { status: 400 });
+  } catch (error) {
+    return handleError(error);
   }
 
   switch (event['type']) {

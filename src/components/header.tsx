@@ -15,7 +15,7 @@ import { Icons } from "./icons";
 import { SidebarTrigger } from "./ui/sidebar";
 import { useCart } from "@/contexts/cart-context";
 import { AuthButton } from "./auth-button";
-import { Button } from "./ui/button";
+
 import  Image from "next/image"
 import Link from "next/link";
 
