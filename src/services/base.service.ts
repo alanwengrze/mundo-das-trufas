@@ -10,36 +10,35 @@ export class BaseService {
   constructor() {
     this.cartRepository = new CartRepository();
     this.productRepository = new ProductsRepository();
-    this.categoriesRepository = new CategoriesRepository
+    this.categoriesRepository = new CategoriesRepository();
   }
   
   protected async getUserId(): Promise<string> {
     const session = await auth();
     if (!session?.user.id) {
-      throw new Error("Usuário não autenticado.");
+      throw new AppError("Usuário não autenticado.", 401);
     }
-    console.log("Usuário autenticado", session.user.id)
     return session.user.id
   }
 
   protected async getRole(): Promise<string> {
     const session = await auth();
-    if (session?.user.role !== "ADMIN") {
-      throw new Error("Usuário nao autorizado");
+    if (!session?.user.role) {
+      throw new AppError("Usuário nao autenticado.");
     }
     return session.user.role
   }
 
   protected async getProduct(productId: string) {
     const product = await this.productRepository.findById(productId);
-    if (!product) throw new Error("Produto não encontrado");
+    if (!product) throw new AppError("Produto não encontrado");
     return product;
   }
 
   protected async getCart(userId: string) {
     const cart = await this.cartRepository.getCart(userId);
 
-    if (!cart) throw new Error("Carrinho nao encontrado");
+    if (!cart) throw new AppError("Carrinho nao encontrado");
     return cart;
   }
 

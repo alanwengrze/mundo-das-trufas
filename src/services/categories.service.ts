@@ -8,12 +8,13 @@ export class CategoriesService {
   }
 
   async findByName(name: string) {
-   const normalizedName = name.toLowerCase() 
+    const normalizedName = name.toLowerCase() 
       .trim() 
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, ""); 
         
-    return this.categoriesRepository.findByName(normalizedName);
+    const category = await this.categoriesRepository.findByName(normalizedName);
+    return category;
   }
 
   async findAll() {

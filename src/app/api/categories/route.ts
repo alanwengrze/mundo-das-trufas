@@ -17,9 +17,9 @@ export async function POST(req: NextRequest) {
   const categoriesService = new CategoriesService();
 
   try {
-    const category = await categoriesService.create(name);
+    await categoriesService.create(name);
 
-    return NextResponse.json(category, { status: 201 });
+    return NextResponse.json({message: "Categoria criada com sucesso."}, { status: 201 });
 
   } catch (error) {
     return handleError(error);

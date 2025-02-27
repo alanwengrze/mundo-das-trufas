@@ -5,17 +5,15 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Package } from "lucide-react"
 import Image from "next/image"
-
-import { useEffect } from "react";
 
 import { useParams} from "next/navigation";
 import useSWR from "swr";
 import type { FullOrderType } from "@/schemas/order.schema";
 import { api } from "@/lib/axios";
-import { dateFormatter, priceFormatter } from "@/utils/dateFormatter"
+import {  priceFormatter } from "@/utils/dateFormatter"
 import { Loader } from "@/components/loader"
+import { OrderInfo } from "./order-info"
 
 export default function OrderDetails(){
   const params = useParams();
@@ -29,9 +27,6 @@ export default function OrderDetails(){
       return response.data;
     });
 
-  useEffect(() => {
-    console.log(id)
-  }, [id])
   if (error) return <p>Erro ao carregar o pedido.</p>;
   if(isLoading) return <Loader />
   if(!order) return <p>Esse pedido não existe.</p>;
@@ -51,27 +46,10 @@ export default function OrderDetails(){
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Informações do pedido</CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-4">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Data do pedido</span>
-              <span>{dateFormatter.format(order.createdAt)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Método de pagamento</span>
-              {
-                order.payment?.type === "cart" ? (
-                  <span className="text-muted-foreground">Cartão</span>
-                ) : (
-                  <span className="text-muted-foreground">Pendente</span>
-                )
-              }
-            </div>
-          </CardContent>
-        </Card>
+        <OrderInfo
+          paymentType={order.payment?.type}
+          createdAt={order.createdAt}
+        />
 
         <Card>
           <CardHeader>
@@ -102,7 +80,7 @@ export default function OrderDetails(){
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[80px]">Image</TableHead>
+                <TableHead className="w-[80px]">Imagem</TableHead>
                 <TableHead>Produto</TableHead>
                 <TableHead>Preço</TableHead>
                 <TableHead>Quantidade</TableHead>
@@ -158,18 +136,6 @@ export default function OrderDetails(){
           </div>
         </CardContent>
       </Card>
-
-      <div className="rounded-lg border bg-card text-card-foreground p-6">
-        <div className="flex items-center gap-4">
-          <Package className="h-6 w-6 text-muted-foreground" />
-          <div className="flex-1">
-            <p className="text-sm font-medium">Delivery Status</p>
-            <p className="text-sm text-muted-foreground">
-              Your order has been delivered on February 19, 2024 at 2:30 PM
-            </p>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }

@@ -22,7 +22,7 @@ export default function Orders() {
   );
   if(isLoading) return <Loader />
   return (
-    <AnimateTransactionWrapper className="container mx-auto">
+    <AnimateTransactionWrapper>
       <Title title={ isAdmin ? "Pedidos" : "Meus pedidos"} />
       <DataTable 
         columns={columns} 

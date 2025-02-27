@@ -96,11 +96,28 @@ export async function POST() {
       },
     });
 
-
-
     console.log("Sessão de checkout criada: ", stripeSession)
 
     return NextResponse.json({ url: stripeSession.url }, { status: 200 });
+  } catch (error) {
+    return handleError(error);
+  }
+}
+
+export async function GET(){
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      throw new AppError("Usuário nao autenticado.");
+    }
+    const payments = await prisma.payment.findMany({
+      where: {
+        order: {
+          userId: session.user.id
+        }
+      },
+    });
+    return NextResponse.json(payments, { status: 200 });
   } catch (error) {
     return handleError(error);
   }

@@ -15,39 +15,43 @@ interface ItemCartProps {
 export const ItemCart = ({itemCart: {product, quantity, productId}, onRemoveItem, onDecrementQuantity, onIncrementQuantity}: ItemCartProps) => {
   const amountByProduct = product.price * quantity
   return(
-    <Card className="w-full mx-auto space-y-4  md:w-full lg:col-span-1 flex place-items-start">
+    <Card className="w-full mx-auto space-y-4 lg:col-span-1">
       <CardContent className="p-6">
-          <div className="flex flex-col gap-4 items-center mb-6 md:flex-row">
-            <div className="relative w-24 h-24 rounded-lg overflow-hidden">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 items-stretch">
+            <div className="relative w-auto   aspect-square rounded-lg overflow-hidden sm:max-w-64">
               <Image
                 src={product.imageUrl || "/placeholder.svg?height=96&width=96"}
                 alt={product.name}
                 fill
                 className="object-cover"
+                priority
               />
             </div>
-            <CardHeader className="flex flex-col space-y-1 md:items-start">
-              <CardTitle className="semibold">{product.name}</CardTitle>
-              <CardTitle className="text-sm text-muted-foreground">{product.category?.name}</CardTitle>
-              <CardDescription>{product.description}</CardDescription> 
-              <span>{priceFormatter.format(product.price)}</span>
-              <span className="text-left text-sm text-muted-foreground">
-                {quantity}x{product.price} = {priceFormatter.format(amountByProduct)}
-              </span>
-            </CardHeader>
+            <div className="flex flex-col justify-between">
+              <CardHeader>
+                <CardTitle className="semibold">{product.name}</CardTitle>
+                <CardTitle className="text-sm text-muted-foreground">{product.category?.name}</CardTitle>
+                <CardDescription>{product.description}</CardDescription> 
+                <span>{priceFormatter.format(product.price)}</span>
+                <span className="text-left text-sm text-muted-foreground">
+                  {quantity}x{product.price} = {priceFormatter.format(amountByProduct)}
+                </span>
+              </CardHeader>
+              <CardFooter className="flex items-center justify-center gap-4 md:justify-normal">
+                <Buy 
+                  quantity={quantity}
+                  onMinus={onDecrementQuantity}
+                  onPlus={onIncrementQuantity}
+                />
+                <Button 
+                  onClick={() => onRemoveItem(productId)}
+                >
+                  <Icons.trash className="h-4 w-4" />
+                </Button>
+              </CardFooter>
+            </div>
           </div>
-          <CardFooter className="flex-1 flex items-center justify-center gap-4 md:justify-normal">
-            <Buy 
-              quantity={quantity}
-              onMinus={onDecrementQuantity}
-              onPlus={onIncrementQuantity}
-            />
-            <Button 
-              onClick={() => onRemoveItem(productId)}
-            >
-              <Icons.trash className="h-4 w-4" />
-            </Button>
-          </CardFooter>
+          
       </CardContent>
     </Card>
   )

@@ -4,7 +4,7 @@ import { orderSchema } from "./order.schema";
 
 export const paymentSchema = z.object({
   amount: z.number(),
-  status: z.enum(["PENDING", "REFUNDED", "COMPLETED", "CANCELED"]),
+  status: z.enum(["PENDING", "COMPLETED", "CANCELED"]),
   orderId: z.string(),
   type: z.string(),
   order: orderSchema.optional()

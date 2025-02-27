@@ -9,7 +9,7 @@ export default function Home() {
   if(loading) return <Loader />
   return (
     <AnimateTransactionWrapper 
-      className="max-w-7xl mt-10 mx-auto overflow-x-hidden"
+      className="mt-10 mx-auto overflow-x-hidden"
     >
      <ProductList products={products}/>
     </AnimateTransactionWrapper>

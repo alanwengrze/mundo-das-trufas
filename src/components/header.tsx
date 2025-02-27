@@ -16,6 +16,8 @@ import { SidebarTrigger } from "./ui/sidebar";
 import { useCart } from "@/contexts/cart-context";
 import { AuthButton } from "./auth-button";
 import { Button } from "./ui/button";
+import  Image from "next/image"
+import Link from "next/link";
 
 
 export const Header = () => {
@@ -59,7 +61,15 @@ export const Header = () => {
           <SidebarTrigger variant="outline" className="md:sticky"/>
         )}
         {!isAuthenticated &&(
-          <Button variant="default" onClick={() => push("/public")}><Icons.home/></Button>
+          <Link href="/">
+            <Image 
+              src="/logo.png"
+              alt="Logo"
+              width={40}
+              height={40}
+              className="w-10 h-10 rounded-full"
+            />
+          </Link>
         )}
         <AuthButton />
         <ThemeToggle />

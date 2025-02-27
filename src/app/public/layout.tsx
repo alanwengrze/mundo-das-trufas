@@ -1,7 +1,7 @@
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div>
+    <div className="w-full mx-auto px-4 py-6 md:py-12 max-w-7xl">
       {children}
     </div>
   );
