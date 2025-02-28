@@ -54,9 +54,9 @@ export function AppSidebar() {
   ]
   if(!isAuthenticated) return null
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" className="z-50 h-full">
       <SidebarHeader />
-      <SidebarContent className="h-screen">
+      <SidebarContent className="w-[--radix-popper-anchor-width]">
         <SidebarGroup>
           <SidebarGroupLabel>Menu</SidebarGroupLabel>
           <SidebarGroupContent>

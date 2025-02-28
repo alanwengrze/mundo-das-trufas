@@ -17,7 +17,7 @@ export const ItemCart = ({itemCart: {product, quantity, productId}, onRemoveItem
   return(
     <Card className="w-full mx-auto space-y-4 lg:col-span-1">
       <CardContent className="p-6">
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 items-stretch">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
             <div className="relative w-auto   aspect-square rounded-lg overflow-hidden sm:max-w-64">
               <Image
                 src={product.imageUrl || "/placeholder.svg?height=96&width=96"}

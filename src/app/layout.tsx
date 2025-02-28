@@ -12,6 +12,7 @@ import { ProductProvider } from "@/contexts/product-context";
 import { AppSidebar } from "@/components/app-sidebar";
 import { cookies } from "next/headers";
 import { Separator } from "@/components/ui/separator";
+import { MainWrapper } from "@/components/main-wrapper";
 export const metadata: Metadata = {
   title: "Mundo das trufas",
   description: "Loja virtual de trufas e sobremesas.",
@@ -38,16 +39,18 @@ export default async function RootLayout({
                   disableTransitionOnChange
                 >
                   <AppSidebar/>
-                  <main className="w-full flex flex-col">
+                  <MainWrapper 
+                    
+                  >
                     <Header />
-                    <section className="px-4 h-full">
+                    <section className=" px-4 h-full ">
                       {children}
                     </section>
                     <Separator />
-                    <footer className="w-full text-center text-muted-foreground text-sm py-3">
+                    <footer className=" text-center text-muted-foreground text-sm py-3">
                       Mundo das trufas
                     </footer>
-                  </main>
+                  </MainWrapper>
                   <Toaster 
                     richColors
                   />
