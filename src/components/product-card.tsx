@@ -65,7 +65,7 @@ export const ProductCard = ({product}: ProductCardProps) => {
         <CardContent className="flex flex-col items-center gap-4">
         
             { 
-              product.quantityInStock <= 0 || !isCustomer ? (
+              product.quantityInStock <= 0 || !isCustomer && status === "authenticated" ? (
                 <span className="text-primary ml-2 font-thin">Indisponível</span>
               ) : (
                 <CardFooter className="flex justify-between items-center gap-3">
