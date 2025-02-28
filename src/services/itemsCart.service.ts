@@ -12,9 +12,14 @@ export class ItemsCartService extends BaseService {
 
   async create(productId: string, quantity: number) {
     const userId = await this.getUserId();
+    const userRole = await this.getRole();
     const cart = await this.getCart(userId);
     const cartId = cart.id;
     const product = await this.getProduct(productId);
+
+    if(userRole === "ADMIN") {
+      throw new AppError("Administradores não podem adicionar produtos ao carrinho.");
+    }
 
     if(quantity > product.quantityInStock) throw new AppError("Quantidade indisponível no estoque.");
 

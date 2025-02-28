@@ -43,7 +43,9 @@ export const ProductCard = ({product}: ProductCardProps) => {
     <motion.div 
       whileHover={{ scale: 1.05 }}
     >
-      <Card className="w-full min-h-52 px-2 rounded-sm flex flex-col items-center justify-around mt-20 md:mt-0">
+      <Card className="w-full min-h-52 px-2 rounded-sm flex flex-col items-center justify-around mt-20 md:mt-0 border-rose-400 border bg-primary/10 "
+       
+      >
         <div className="flex flex-col items-center gap-4 md:flex-row">
           <div className="relative w-20 h-20 aspect-square">
             <Image

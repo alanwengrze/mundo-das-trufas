@@ -9,14 +9,13 @@ import Image from "next/image"
 import type { ProductType } from "@/schemas/product.schema"
 import { FullCategoryType } from "@/schemas/category.schema"
 import Link from "next/link"
-// import { useProduct } from "@/contexts/product-context"
 import { 
   DropdownMenuItem,
  } from "@/components/ui/dropdown-menu"
  import { MoreAction } from "@/components/more-action"
 import { ButtonDestructive } from "@/components/button-destructive"
 import { DataTableFilterByIndex } from "@/components/data-table-filter-by-index"
-import swr from "swr"
+import swr, { mutate } from "swr"
 import { api } from "@/lib/axios"
 
 
@@ -142,9 +141,8 @@ export const columns: ColumnDef<ProductType>[] = [
    
      const handleDelete = async () => {
        try {
-        //  await deleteProduct(id);
-        console.log("deletou ")
-         
+        await api.delete(`/products/${id}`);
+        mutate(`/products`);
        } catch (error) {
          console.error(error);
        }
