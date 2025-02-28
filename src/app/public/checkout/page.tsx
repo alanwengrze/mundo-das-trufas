@@ -11,6 +11,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
 import { AddressList } from "./address-list"
+import { Loader } from "@/components/loader"
 export default function CheckoutPage() {
 
   const [addressType, setAddressType] = useState("registered")
@@ -21,14 +22,20 @@ export default function CheckoutPage() {
     const response = await api.get(url);
     return response.data;
   })
-  
+  const withAddress = address && address.length > 0;
+  if(isLoading) return <Loader />
+  if(!withAddress) return <NewAddress />
   return(
     <Card className="max-w-2xl mx-auto px-4">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold">Endereço de entrega</CardTitle>
       </CardHeader>
       <CardContent>
-        <RadioGroup defaultValue="registered" onValueChange={(value) => setAddressType(value)} className="space-y-3 mb-4">
+        <RadioGroup 
+          defaultValue="registered"
+          onValueChange={(value) => setAddressType(value)} 
+          className="space-y-3 mb-4"
+        >
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="registered" id="registered" />
               <Label htmlFor="registered">Usar um endereço cadastrado</Label>
@@ -39,7 +46,7 @@ export default function CheckoutPage() {
             </div>
         </RadioGroup>
 
-          {isLoading ? <p>Carregando...</p> : addressType === "registered" && (
+          {addressType === "registered" ? (
           <div className="space-y-4">
             {address?.map((address) => (
               <AddressList 
@@ -50,8 +57,7 @@ export default function CheckoutPage() {
               />
             ))}
           </div>
-        )}
-        {addressType === "new" && (
+        ):(
           <NewAddress />
         )}
       </CardContent>

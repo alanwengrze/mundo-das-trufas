@@ -12,23 +12,21 @@ import {
 import { Title } from "./title"
 
 import { AnimateBouncingBlob } from "./animate-bouncing-blob"
-
+import { cn } from "@/lib/utils"
+import { useSidebar } from "./ui/sidebar"
 export function ProductList({products}:{products: FullProductType[]}) {
   const productsByCategory = getProductsByCategory(products);
+  const { open } = useSidebar();
   return (
     <>
       {
         Object.keys(productsByCategory)
         .sort((a, b) => a.localeCompare(b))
         .map((category) => (
-          <div key={category} className=" overflow-hidden relative rounded-sm">
+          <div key={category} className=" relative rounded-sm">
             <AnimateBouncingBlob />
           <Carousel
-            // key={category}
             className="glass px-2"
-            opts={{
-              align: "center",
-            }}
           >
             <Title title={category} />
             <CarouselContent
@@ -38,7 +36,10 @@ export function ProductList({products}:{products: FullProductType[]}) {
                 productsByCategory[category].map((product) => (
                 <CarouselItem 
                   key={product.id}
-                  className=" pl-4 sm:basis-1/2 lg:basis-1/3 xl:basis-1/3"
+                  className={cn(
+                    "pl-4 sm:basis-1/2 lg:basis-1/3 xl:basis-1/4",
+                    open && "md:basis-full lg:basis-1/2 "
+                  )}
                 >
                   <ProductCard
                     product={product}
