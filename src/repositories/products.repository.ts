@@ -2,9 +2,17 @@ import { prisma } from "@/lib/prisma";
 import type { ProductType } from "@/schemas/product.schema";
 
 export class ProductsRepository {
-  async findAll() {
+  async findAll(query?: string) {
     const products = await prisma.product.findMany({
-      where: { active: true },
+      where:{
+        active: true,
+        ...(query ? { name: 
+          { 
+            contains: query, 
+            mode: "insensitive" 
+          }
+        } : {}),
+      },
       orderBy: { name: "asc" },
       include: {
         category: {

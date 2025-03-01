@@ -19,10 +19,11 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const params = req.nextUrl.searchParams.get("query") || "";
   const productService = new ProductsService();
   try {
-    const products = await productService.findAll();
+    const products = await productService.findAll(params);
 
     return NextResponse.json(products, { status: 200 });
   } catch (error) {

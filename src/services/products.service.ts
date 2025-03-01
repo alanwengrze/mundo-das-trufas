@@ -10,8 +10,8 @@ export class ProductsService {
     this.stripeProductsService = new StripeProductsService();
   }
 
-  async findAll() {
-    return this.productsRepository.findAll();
+  async findAll(query?: string) {
+    return this.productsRepository.findAll(query);
   }
 
   async findById(id: string) {

@@ -42,7 +42,7 @@ export default function OrderDetails(){
             order.status === "COMPLETED" && "bg-green-200 text-green-600 border-green-600",
             order.status === "CANCELED" && "bg-red-200 text-red-600 border-red-600",
           )}
-          >{order.status}</Badge>
+          >{order.status === 'COMPLETED' ? 'Finalizado' : order.status === 'CANCELED' ? 'Cancelado' : 'Pendente'}</Badge>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">

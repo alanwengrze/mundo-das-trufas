@@ -8,6 +8,7 @@ import useSWR from "swr";
 interface ProductContextType {
   products: FullProductType[];
   getProductById: (id: string) => Promise<FullProductType | null>;
+  getProducts: (query: string) => Promise<FullProductType[]>;
   deleteProduct: (id: string) => Promise<void>;
   error: string | null;
   loading: boolean
@@ -39,6 +40,14 @@ export function ProductProvider({ children }: ProductProviderProps) {
       console.error(error);
     }
   }
+  async function getProducts(query: string) {
+    try {
+      const response = await api.get(`/products?query=${query}`);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   async function deleteProduct(id: string) {
     try {
@@ -54,6 +63,7 @@ export function ProductProvider({ children }: ProductProviderProps) {
       value={{
         products: products || [],
         getProductById,
+        getProducts,
         deleteProduct,
         error: error?.message || null,
         loading

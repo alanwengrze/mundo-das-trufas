@@ -43,22 +43,21 @@ export const ProductCard = ({product}: ProductCardProps) => {
     <motion.div 
       whileHover={{ scale: 1.05 }}
     >
-      <Card className="w-full min-h-52 px-2 rounded-sm flex flex-col items-center justify-around mt-20 md:mt-0 border-rose-400 border bg-primary/10 "
+      <Card className="relative w-full min-h-52 px-2 flex flex-col items-center justify-around mt-20 border-primary border bg-primary/10 text-card-foreground shadow rounded-md dark:bg-primary/5 dark:border-rose-300/30"
        
       >
-        <div className="flex flex-col items-center gap-4 md:flex-row">
-          <div className="relative w-20 h-20 aspect-square">
-            <Image
-              src={product.imageUrl || "/placeholder.svg?height=200&width=200"}
-              alt={product.name}
-              width={200}
-              height={200}
-              loading="eager"
-              className="mx-auto object-cover h-20 w-20 -mt-10 rounded-full md:mt-0"
-            />
-          </div>
+        <div className="flex flex-col items-center gap-4 ">
+          <Image
+            src={product.imageUrl || "/placeholder.svg?height=200&width=200"}
+            alt={product.name}
+            width={200}
+            height={200}
+            loading="eager"
+            className="z-10 relative mx-auto object-cover h-20 w-20 -mt-10 rounded-full"
+          />
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full border-4 border-rose-400 bg-primary"></div>
           <CardHeader>
-            <CardTitle className="mx-auto px-4 text-sm uppercase text-rose-600 bg-rose-200 border border-rose-600 font-semibold text-center rounded-md">
+            <CardTitle className="mx-auto px-4 text-sm uppercase text-primary border border-primary font-semibold text-center rounded-md dark:bg-primary/30 dark:border-primary/5">
               {product.category.name}
             </CardTitle>
             <CardDescription className="text-md capitalize text-center">{product.name}</CardDescription>

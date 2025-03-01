@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/carousel"
 import { Title } from "./title"
 
-import { AnimateBouncingBlob } from "./animate-bouncing-blob"
 import { cn } from "@/lib/utils"
 import { useSidebar } from "./ui/sidebar"
 export function ProductList({products}:{products: FullProductType[]}) {
@@ -23,34 +22,33 @@ export function ProductList({products}:{products: FullProductType[]}) {
         Object.keys(productsByCategory)
         .sort((a, b) => a.localeCompare(b))
         .map((category) => (
-          <div key={category} className="  rounded-sm">
-          <Carousel
-            className="glass px-2"
+        <Carousel
+          key={category}
+          className="glass px-2 mx-4"
+        >
+          <Title title={category} />
+          <CarouselContent
+            className="my-4"
           >
-            <Title title={category} />
-            <CarouselContent
-              className="my-4 sm:m-4"
-            >
-              {
-                productsByCategory[category].map((product) => (
-                <CarouselItem 
-                  key={product.id}
-                  className={cn(
-                    " pl-4 sm:basis-1/2 lg:basis-1/3 xl:basis-1/4",
-                    open && "md:basis-full lg:basis-1/2 "
-                  )}
-                >
-                  <ProductCard
-                    product={product}
-                  />
-                </CarouselItem>
-                ))
-              }
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-          </Carousel>
-          </div>
+            {
+              productsByCategory[category].map((product) => (
+              <CarouselItem 
+                key={product.id}
+                className={cn(
+                  " pl-4 sm:basis-1/2 lg:basis-1/3 xl:basis-1/4",
+                  open && "md:basis-full lg:basis-1/2 "
+                )}
+              >
+                <ProductCard
+                  product={product}
+                />
+              </CarouselItem>
+              ))
+            }
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
         ))
       }
     </>

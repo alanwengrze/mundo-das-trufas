@@ -10,14 +10,15 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarHeader,
   SidebarSeparator
 } from "@/components/ui/sidebar"
+
 import { Icons } from "./icons";
 import { useRouter, usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useCart } from "@/contexts/cart-context";
+import { useSidebar } from "@/components/ui/sidebar";
 export function AppSidebar() {
   const { push } = useRouter();
   const pathname = usePathname();
@@ -25,6 +26,7 @@ export function AppSidebar() {
   const { itemsCart } = useCart();
   const isAuthenticated = status === "authenticated";
   const isAdmin = session?.user?.role === "ADMIN";
+  const { open } = useSidebar();
   const items = [
   {
     title: "Catálogo",
@@ -55,7 +57,6 @@ export function AppSidebar() {
   if(!isAuthenticated) return null
   return (
     <Sidebar collapsible="icon" className="z-50 h-full">
-      <SidebarHeader />
       <SidebarContent className="w-[--radix-popper-anchor-width]">
         <SidebarGroup>
           <SidebarGroupLabel>Menu</SidebarGroupLabel>
@@ -82,16 +83,21 @@ export function AppSidebar() {
             </SidebarMenu>
             </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarGroup />
+        
       </SidebarContent>
       <SidebarSeparator className="mx-0"/>
-      <SidebarFooter>
+      <SidebarFooter className="w-fit">
         <div className="flex items-center gap-2">
           <Image src={session?.user.image || "/placeholder.svg?height=32&width=32"} alt="avatar" className="h-8 w-8 rounded-full" width={32} height={32} />
-          <div className="flex flex-col gap-1">
-            {session?.user.name && <p className="text-sm font-medium leading-none text-muted-foreground">{session.user.name}</p>}
-            {session?.user.email && <p className="text-xs leading-none text-accent-foreground">{session.user.email}</p>}
-          </div>
+          {
+            open && (
+              <div className="flex flex-col gap-1">
+                {session?.user.name && <p className="text-sm font-medium leading-none text-muted-foreground">{session.user.name}</p>}
+                {session?.user.email && <p className="text-xs leading-none text-accent-foreground">{session.user.email}</p>}
+              </div>
+            )
+          }
+          
         </div>
       </SidebarFooter>
     </Sidebar>
