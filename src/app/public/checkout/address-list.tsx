@@ -13,6 +13,7 @@ interface AddressListProps {
 export function AddressList({address, selectedAddress, onSelectAddress}: AddressListProps) {
   const { push } = useRouter();
   async function handleOnSubmit(data: FullAddressType) {
+    console.log("data", data)
     try {
       const res = await api.post("/payment");
       if (res.status !== 200) throw new Error("Erro ao iniciar checkout");
